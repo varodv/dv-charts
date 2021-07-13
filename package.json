@@ -26,6 +26,7 @@
     "dist"
   ],
   "scripts": {
+    "lint": "eslint src/**/*.{ts,js} --quiet --fix",
     "build": "rimraf dist && tsc --pretty"
   },
   "devDependencies": {
