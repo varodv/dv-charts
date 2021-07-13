@@ -26,7 +26,7 @@
     "dist"
   ],
   "scripts": {
-    "lint": "eslint src/**/*.{ts,js} --quiet --fix",
+    "lint": "eslint */**/*.{ts,js} --quiet --fix",
     "build": "rimraf dist && tsc --pretty"
   },
   "devDependencies": {
@@ -41,5 +41,13 @@
   },
   "engines": {
     "node": ">=12.0.0"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts,js}": [
+      "eslint --fix"
+    ]
   }
 }
