@@ -27,7 +27,8 @@
   ],
   "scripts": {
     "lint": "eslint */**/*.{ts,js} --quiet --fix",
-    "build": "rimraf dist && rollup --config"
+    "build": "rimraf dist && rollup --config",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.2",
