@@ -1,3 +1,4 @@
+import postcss from 'rollup-plugin-postcss';
 import typescript from 'rollup-plugin-typescript2';
 
 export default {
@@ -9,5 +10,5 @@ export default {
     preserveModulesRoot: 'src',
     sourcemap: true,
   },
-  plugins: [typescript()],
+  plugins: [typescript(), postcss()],
 };
