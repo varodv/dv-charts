@@ -3,7 +3,8 @@
     "packages/*"
   ],
   "scripts": {
-    "lint": "eslint '*/**/*.{ts,js}' --quiet --fix"
+    "lint": "eslint '*/**/*.{ts,js}' --quiet --fix",
+    "build": "lerna run build"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.28.5",
@@ -13,6 +14,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "lerna": "^4.0.0",
     "prettier": "^2.3.2",
+    "rimraf": "^3.0.2",
     "typescript": "^4.3.5"
   },
   "gitHooks": {

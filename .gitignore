@@ -9,3 +9,7 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/sdks
+
+node_modules
+
+**/dist
