@@ -3,7 +3,7 @@
     "packages/*"
   ],
   "scripts": {
-    "lint": "eslint '*/**/*.{ts,js}' --quiet --fix",
+    "lint": "eslint '**/*.{ts,js}' --quiet --fix",
     "test": "jest",
     "build": "lerna run build"
   },
