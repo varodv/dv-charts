@@ -26,17 +26,23 @@
     "dist"
   ],
   "scripts": {
+    "test": "jest",
     "clean": "rimraf dist",
     "compile": "rollup --config",
     "build": "yarn run clean && yarn run compile"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.4",
+    "@types/jest": "^26.0.24",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.0.6",
     "postcss": "^8.3.6",
     "rollup": "^2.54.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.0",
     "rollup-plugin-typescript2": "^0.30.0",
-    "sass": "^1.36.0"
+    "sass": "^1.36.0",
+    "ts-jest": "^27.0.4",
+    "ts-node": "^10.1.0"
   }
 }
