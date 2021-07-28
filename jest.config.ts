@@ -1,12 +1,6 @@
-module.exports = {
-  roots: ['src'],
-  testMatch: ['**/*.test.ts'],
-  moduleFileExtensions: ['ts', 'js'],
-  transform: {
-    '^.+\\.ts$': 'ts-jest',
-  },
-  testEnvironment: 'jsdom',
-  moduleNameMapper: {
-    '\\.scss$': 'identity-obj-proxy',
-  },
+import base from './jest.config.base';
+
+export default {
+  ...base,
+  projects: ['packages/*'],
 };

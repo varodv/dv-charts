@@ -1,0 +1,51 @@
+{
+  "name": "dv-charts",
+  "version": "0.0.0",
+  "description": "JavaScript charting library",
+  "keywords": [
+    "charts",
+    "visualization",
+    "d3"
+  ],
+  "homepage": "https://github.com/varodv/dv-charts#readme",
+  "bugs": {
+    "url": "https://github.com/varodv/dv-charts/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/varodv/dv-charts.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Álvaro Díaz",
+    "url": "https://github.com/varodv"
+  },
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "jest",
+    "clean": "rimraf dist",
+    "compile": "rollup --config",
+    "build": "yarn run clean && yarn run compile"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@types/jest": "^26.0.24",
+    "@types/node": "^16.4.5",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.0.6",
+    "postcss": "^8.3.6",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.54.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.0",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "sass": "^1.36.0",
+    "ts-jest": "^27.0.4",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
+  }
+}
