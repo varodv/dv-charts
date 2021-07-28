@@ -1,5 +1,5 @@
 export default {
-  testMatch: ['**/*.test.ts'],
+  testMatch: ['**/*.spec.ts'],
   moduleFileExtensions: ['ts', 'js'],
   transform: {
     '^.+\\.ts$': 'ts-jest',
