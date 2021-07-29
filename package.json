@@ -4,7 +4,8 @@
     "packages/*"
   ],
   "scripts": {
-    "lint": "eslint **/*.{ts,js} --quiet --fix",
+    "lint:script": "eslint **/*.{ts,js,vue} --quiet --fix",
+    "lint:style": "stylelint **/*.{scss,css,vue} --quiet --fix",
     "test": "jest",
     "build": "lerna run build"
   },
@@ -13,12 +14,18 @@
     "@types/node": "^16.4.5",
     "@typescript-eslint/eslint-plugin": "^4.28.5",
     "@typescript-eslint/parser": "^4.28.5",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "@vue/eslint-config-typescript": "^7.0.0",
     "eslint": "^7.31.0",
-    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-vue": "^7.14.0",
+    "husky": "^7.0.1",
     "jest": "^27.0.6",
     "lerna": "^4.0.0",
+    "lint-staged": "^11.1.1",
     "prettier": "^2.3.2",
+    "stylelint": "^13.13.1",
+    "stylelint-config-standard": "^22.0.0",
     "ts-jest": "^27.0.4",
     "ts-node": "^10.1.0",
     "typescript": "^4.3.5"
@@ -26,12 +33,14 @@
   "engines": {
     "node": ">=12.0.0"
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
-    "*.{ts,js}": [
-      "eslint --fix"
-    ]
+    "**/*.{ts,js,vue}": "eslint --fix",
+    "**/*.{scss,css,vue}": "stylelint --fix",
+    "*": "prettier --write --ignore-unknown"
   }
 }
