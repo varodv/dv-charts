@@ -4,10 +4,12 @@ import { Params } from './models/params';
 import { RequireAtLeastOne } from './models/require-at-least-one';
 import { Size } from './models/size';
 
+import { select, Selection } from 'd3-selection';
+
 export abstract class AbstractComponent<DataType, ConfigType extends Config>
   implements Component<DataType, ConfigType>
 {
-  protected element?: HTMLElement;
+  protected element?: Selection;
 
   protected data?: DataType;
 
@@ -23,7 +25,7 @@ export abstract class AbstractComponent<DataType, ConfigType extends Config>
   }
 
   public init(element: HTMLElement, params?: Params<DataType, ConfigType>): void {
-    this.element = element;
+    this.element = select(element);
 
     const { data, config } = params || {};
     if (!!data) {
