@@ -2,6 +2,7 @@ import { Component } from './models/component';
 import { Config } from './models/config';
 import { Params } from './models/params';
 import { RequireAtLeastOne } from './models/require-at-least-one';
+import { Size } from './models/size';
 
 export abstract class AbstractComponent<DataType, ConfigType extends Config>
   implements Component<DataType, ConfigType>
@@ -11,6 +12,11 @@ export abstract class AbstractComponent<DataType, ConfigType extends Config>
   protected data?: DataType;
 
   protected config: ConfigType;
+
+  protected size?: Size;
+
+  private resizeObserver?: ResizeObserver;
+  private isResizeObserverInitialized = false;
 
   constructor(config?: RequireAtLeastOne<ConfigType>) {
     this.config = Object.assign(this.getDefaultConfig(), config);
@@ -27,6 +33,28 @@ export abstract class AbstractComponent<DataType, ConfigType extends Config>
     if (!!config) {
       this.config = Object.assign(this.config, config);
     }
+
+    const { height, width } = element.getBoundingClientRect();
+    this.size = {
+      height,
+      width,
+    };
+
+    this.resizeObserver = new ResizeObserver((entries): void => {
+      entries.forEach((entry): void => {
+        if (!this.isResizeObserverInitialized) {
+          this.isResizeObserverInitialized = true;
+        } else {
+          const { height, width } = entry.contentRect;
+          this.size = {
+            height,
+            width,
+          };
+          this.resize();
+        }
+      });
+    });
+    this.resizeObserver.observe(element);
   }
 
   public update({ data, config }: Params<DataType, ConfigType>): void {
@@ -39,11 +67,15 @@ export abstract class AbstractComponent<DataType, ConfigType extends Config>
     }
   }
 
-  public abstract destroy(): void;
+  public destroy(): void {
+    this.resizeObserver?.disconnect();
+  }
 
   protected getDefaultConfig(): any {
     return {
       animationsDurationInMillis: 400,
     };
   }
+
+  protected abstract resize(): void;
 }
