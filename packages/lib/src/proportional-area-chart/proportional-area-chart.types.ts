@@ -1,3 +1,5 @@
+import { Config } from '../shared/models/config';
+
 export type ProportionalAreaChartData = ProportionalAreaChartDataItem[];
 
 export interface ProportionalAreaChartDataItem {
@@ -5,6 +7,4 @@ export interface ProportionalAreaChartDataItem {
   count: number;
 }
 
-export interface ProportionalAreaChartConfig {
-  animationsDurationInMillis: number;
-}
+export type ProportionalAreaChartConfig = Config;
