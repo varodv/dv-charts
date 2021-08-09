@@ -18,7 +18,7 @@ export abstract class AbstractComponent<DataType, ConfigType extends Config>
   protected size?: Size;
 
   private resizeObserver?: ResizeObserver;
-  private isResizeObserverInitialized = false;
+  private resizeObserverInitialized = false;
 
   constructor(config?: RequireAtLeastOne<ConfigType>) {
     this.config = Object.assign(this.getDefaultConfig(), config);
@@ -42,20 +42,7 @@ export abstract class AbstractComponent<DataType, ConfigType extends Config>
       width,
     };
 
-    this.resizeObserver = new ResizeObserver((entries): void => {
-      entries.forEach((entry): void => {
-        if (!this.isResizeObserverInitialized) {
-          this.isResizeObserverInitialized = true;
-        } else {
-          const { height, width } = entry.contentRect;
-          this.size = {
-            height,
-            width,
-          };
-          this.resize();
-        }
-      });
-    });
+    this.resizeObserver = new ResizeObserver(this.resizeObserverCallback);
     this.resizeObserver.observe(element);
   }
 
@@ -80,4 +67,19 @@ export abstract class AbstractComponent<DataType, ConfigType extends Config>
   }
 
   protected abstract resize(): void;
+
+  private resizeObserverCallback(entries: any): void {
+    entries.forEach((entry: any): void => {
+      if (!this.resizeObserverInitialized) {
+        this.resizeObserverInitialized = true;
+      } else {
+        const { height, width } = entry.contentRect;
+        this.size = {
+          height,
+          width,
+        };
+        this.resize();
+      }
+    });
+  }
 }
