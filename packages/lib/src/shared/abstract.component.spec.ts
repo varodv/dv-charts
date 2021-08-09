@@ -18,9 +18,11 @@ describe('AbstractComponent', () => {
   };
 
   const resizeObserverObserveMock = jest.fn();
+  const resizeObserverDisconnectMock = jest.fn();
   beforeAll(() => {
     (window as any).ResizeObserver = jest.fn().mockImplementation(() => ({
       observe: resizeObserverObserveMock,
+      disconnect: resizeObserverDisconnectMock,
     }));
   });
 
@@ -102,6 +104,20 @@ describe('AbstractComponent', () => {
     it('should not throw an error when component is not initialized yet', () => {
       const component = new TestComponent();
       expect(() => component.update({ data, config })).not.toThrowError();
+    });
+  });
+
+  describe('destroy', () => {
+    it('should destroy the component', () => {
+      const component = new TestComponent();
+      component.init(document.createElement('div'));
+      component.destroy();
+      expect(resizeObserverDisconnectMock).toHaveBeenCalled();
+    });
+
+    it('should not throw an error when component is not initialized yet', () => {
+      const component = new TestComponent();
+      expect(() => component.destroy()).not.toThrowError();
     });
   });
 });
