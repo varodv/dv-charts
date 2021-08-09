@@ -7,4 +7,5 @@ export default {
   moduleNameMapper: {
     '\\.scss$': 'identity-obj-proxy',
   },
+  transformIgnorePatterns: ['<rootDir>/node_modules/(?!d3-\\w+)'],
 };
