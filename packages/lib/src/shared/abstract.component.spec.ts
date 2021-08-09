@@ -1,6 +1,7 @@
 import { AbstractComponent } from './abstract.component';
 
 import { Config } from './models/config';
+import { Size } from './models/size';
 
 class TestComponent extends AbstractComponent<number[], Config> {
   protected resize(): void {
@@ -9,6 +10,7 @@ class TestComponent extends AbstractComponent<number[], Config> {
 }
 
 describe('AbstractComponent', () => {
+  const element = document.createElement('div');
   const data = [5, 7];
   const defaultConfig: Config = {
     animationsDurationInMillis: 400,
@@ -45,32 +47,32 @@ describe('AbstractComponent', () => {
   describe('init', () => {
     it('should initialize the component into the passed element', () => {
       const component = new TestComponent();
-      const element = document.createElement('div');
       component.init(element);
       expect(component['element']!.node()).toEqual(element);
       expect(component['data']).toBeUndefined();
       expect(component['config']).toEqual(defaultConfig);
       expect(component['size']).toEqual({ height: 0, width: 0 });
+      expect(window.ResizeObserver).toHaveBeenLastCalledWith(component['resizeObserverCallback']);
       expect(resizeObserverObserveMock).toHaveBeenCalledWith(element);
     });
 
     it('should initialize the component with the passed data', () => {
       const component = new TestComponent();
-      component.init(document.createElement('div'), { data });
+      component.init(element, { data });
       expect(component['data']).toEqual(data);
       expect(component['config']).toEqual(defaultConfig);
     });
 
     it('should initialize the component with the passed config', () => {
       const component = new TestComponent();
-      component.init(document.createElement('div'), { config });
+      component.init(element, { config });
       expect(component['data']).toBeUndefined();
       expect(component['config']).toEqual(config);
     });
 
     it('should initialize the component with the passed data and config', () => {
       const component = new TestComponent();
-      component.init(document.createElement('div'), { data, config });
+      component.init(element, { data, config });
       expect(component['data']).toEqual(data);
       expect(component['config']).toEqual(config);
     });
@@ -79,7 +81,7 @@ describe('AbstractComponent', () => {
   describe('update', () => {
     it('should update the component with the passed data', () => {
       const component = new TestComponent();
-      component.init(document.createElement('div'));
+      component.init(element);
       component.update({ data });
       expect(component['data']).toEqual(data);
       expect(component['config']).toEqual(defaultConfig);
@@ -87,7 +89,7 @@ describe('AbstractComponent', () => {
 
     it('should update the component with the passed config', () => {
       const component = new TestComponent();
-      component.init(document.createElement('div'));
+      component.init(element);
       component.update({ config });
       expect(component['data']).toBeUndefined();
       expect(component['config']).toEqual(config);
@@ -95,7 +97,7 @@ describe('AbstractComponent', () => {
 
     it('should update the component with the passed data and config', () => {
       const component = new TestComponent();
-      component.init(document.createElement('div'));
+      component.init(element);
       component.update({ data, config });
       expect(component['data']).toEqual(data);
       expect(component['config']).toEqual(config);
@@ -108,16 +110,62 @@ describe('AbstractComponent', () => {
   });
 
   describe('destroy', () => {
+    let component: TestComponent;
+    beforeEach(() => {
+      component = new TestComponent();
+    });
+
     it('should destroy the component', () => {
-      const component = new TestComponent();
-      component.init(document.createElement('div'));
+      component.init(element);
       component.destroy();
       expect(resizeObserverDisconnectMock).toHaveBeenCalled();
     });
 
     it('should not throw an error when component is not initialized yet', () => {
-      const component = new TestComponent();
       expect(() => component.destroy()).not.toThrowError();
+    });
+  });
+
+  describe('resizeObserverCallback', () => {
+    const size: Size = {
+      height: 100,
+      width: 200,
+    };
+    const entry = {
+      target: element,
+      contentRect: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        x: 0,
+        y: 0,
+        height: size.height,
+        width: size.width,
+        toJSON: () => ({}),
+      },
+      borderBoxSize: [],
+      contentBoxSize: [],
+    } as ResizeObserverEntry;
+
+    let component: TestComponent;
+    const resizeMock = jest.fn();
+    beforeEach(() => {
+      component = new TestComponent();
+      component['resize'] = resizeMock;
+    });
+
+    it('should not fire a resize on component init', () => {
+      // This emulates the first ResizeObserver execution caused by the .observe()
+      component['resizeObserverCallback']([entry, entry]);
+      expect(resizeMock).not.toHaveBeenCalled();
+    });
+
+    it('should fire a resize (one) after component init', () => {
+      component['resizeObserverCallback']([entry, entry]);
+      component['resizeObserverCallback']([entry, entry]);
+      expect(resizeMock).toHaveBeenCalledTimes(1);
+      expect(component['size']).toEqual(size);
     });
   });
 });
