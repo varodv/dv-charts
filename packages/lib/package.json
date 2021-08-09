@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.4",
+    "@types/d3-selection": "^3.0.1",
     "@types/jest": "^26.0.24",
     "@types/node": "^16.4.5",
     "d3-selection": "^3.0.0",
