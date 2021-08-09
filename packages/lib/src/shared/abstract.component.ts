@@ -68,18 +68,18 @@ export abstract class AbstractComponent<DataType, ConfigType extends Config>
 
   protected abstract resize(): void;
 
-  private resizeObserverCallback(entries: any): void {
-    entries.forEach((entry: any): void => {
-      if (!this.resizeObserverInitialized) {
-        this.resizeObserverInitialized = true;
-      } else {
+  private resizeObserverCallback(entries: ResizeObserverEntry[]): void {
+    if (!this.resizeObserverInitialized) {
+      this.resizeObserverInitialized = true;
+    } else {
+      entries.forEach((entry: ResizeObserverEntry): void => {
         const { height, width } = entry.contentRect;
         this.size = {
           height,
           width,
         };
-        this.resize();
-      }
-    });
+      });
+      this.resize();
+    }
   }
 }
