@@ -31,6 +31,9 @@
     "compile": "rollup --config",
     "build": "yarn run clean && yarn run compile"
   },
+  "peerDependencies": {
+    "d3-selection": "^3.0.0"
+  },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@types/d3-selection": "^3.0.1",
