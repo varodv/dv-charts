@@ -153,16 +153,18 @@ describe('AbstractComponent', () => {
     beforeEach(() => {
       component = new TestComponent();
       component['resize'] = resizeMock;
+
+      // This emulates the first ResizeObserver execution caused by its default .observe() implentation
+      resizeObserverObserveMock.mockImplementation(() => component['resizeObserverCallback']([]));
     });
 
     it('should not fire a resize on component init', () => {
-      // This emulates the first ResizeObserver execution caused by the .observe()
-      component['resizeObserverCallback']([entry, entry]);
+      component.init(element);
       expect(resizeMock).not.toHaveBeenCalled();
     });
 
     it('should fire a resize (one) after component init', () => {
-      component['resizeObserverCallback']([entry, entry]);
+      component.init(element);
       component['resizeObserverCallback']([entry, entry]);
       expect(resizeMock).toHaveBeenCalledTimes(1);
       expect(component['size']).toEqual(size);
