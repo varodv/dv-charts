@@ -1,30 +1,59 @@
 <template>
-  <div class="app-charts" ref="charts"></div>
+  <div ref="chartRef" class="chart" />
 </template>
 
 <script lang="ts">
-  import { init } from 'dv-charts';
+  import { ProportionalAreaChartComponent } from 'dv-charts/dist/proportional-area-chart';
 
-  import { defineComponent, onMounted, ref } from 'vue';
+  import { defineComponent, onBeforeUnmount, onMounted, ref } from 'vue';
 
   export default defineComponent({
     name: 'App',
     setup: () => {
-      const charts = ref();
+      const chartRef = ref();
 
+      const animationsDurationInMillis = 1000;
+      const chartComponent = new ProportionalAreaChartComponent({ animationsDurationInMillis });
+
+      let interval: any;
       onMounted(() => {
-        init(charts.value);
+        chartComponent.init(chartRef.value);
+        interval = setInterval(() => {
+          chartComponent.update({
+            data: Array.from({ length: Math.floor(Math.random() * 101) }, (_, index: number) => ({
+              id: index.toString(),
+              count: Math.floor(Math.random() * 101),
+            })),
+          });
+        }, animationsDurationInMillis);
+      });
+      onBeforeUnmount(() => {
+        clearInterval(interval);
+        chartComponent.destroy();
       });
 
       return {
-        charts,
+        chartRef,
       };
     },
   });
 </script>
 
 <style lang="scss">
-  .app-charts {
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .chart {
     height: 100px;
   }
 </style>
