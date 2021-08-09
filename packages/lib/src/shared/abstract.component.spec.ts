@@ -73,4 +73,35 @@ describe('AbstractComponent', () => {
       expect(component['config']).toEqual(config);
     });
   });
+
+  describe('update', () => {
+    it('should update the component with the passed data', () => {
+      const component = new TestComponent();
+      component.init(document.createElement('div'));
+      component.update({ data });
+      expect(component['data']).toEqual(data);
+      expect(component['config']).toEqual(defaultConfig);
+    });
+
+    it('should update the component with the passed config', () => {
+      const component = new TestComponent();
+      component.init(document.createElement('div'));
+      component.update({ config });
+      expect(component['data']).toBeUndefined();
+      expect(component['config']).toEqual(config);
+    });
+
+    it('should update the component with the passed data and config', () => {
+      const component = new TestComponent();
+      component.init(document.createElement('div'));
+      component.update({ data, config });
+      expect(component['data']).toEqual(data);
+      expect(component['config']).toEqual(config);
+    });
+
+    it('should not throw an error when component is not initialized yet', () => {
+      const component = new TestComponent();
+      expect(() => component.update({ data, config })).not.toThrowError();
+    });
+  });
 });
