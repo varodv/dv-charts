@@ -4,7 +4,7 @@ import postcss from 'rollup-plugin-postcss';
 import typescript from 'rollup-plugin-typescript2';
 
 export default {
-  input: ['src/index.ts'],
+  input: ['src/index.ts', 'src/proportional-area-chart/index.ts'],
   output: {
     format: 'esm',
     dir: 'dist',
