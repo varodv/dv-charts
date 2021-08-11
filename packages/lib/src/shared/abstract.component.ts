@@ -42,7 +42,8 @@ export abstract class AbstractComponent<DataType, ConfigType extends Config>
       width,
     };
 
-    this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => this.resizeObserverCallback(entries));
+    this.resizeObserverCallback = this.resizeObserverCallback.bind(this);
+    this.resizeObserver = new ResizeObserver(this.resizeObserverCallback);
     this.resizeObserver.observe(element);
   }
 
