@@ -7,6 +7,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "d3-selection": "^3.0.0",
     "dv-charts": "0.0.0",
     "vue": "^3.0.5"
   },
