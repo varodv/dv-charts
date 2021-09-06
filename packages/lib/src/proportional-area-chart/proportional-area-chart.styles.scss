@@ -1,0 +1,16 @@
+.dv-proportional-area-chart {
+  $primary-color: lightcoral !default;
+  $background-color: white !default;
+  $stroke-width: 1px !default;
+
+  &__svg {
+    height: 100%;
+    width: 100%;
+  }
+
+  &__circle {
+    fill: var(--primary-color, $primary-color);
+    stroke: var(--background-color, $background-color);
+    stroke-width: var(--stroke-width, $stroke-width);
+  }
+}

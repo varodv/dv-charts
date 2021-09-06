@@ -9,7 +9,7 @@ import { select, Selection } from 'd3-selection';
 export abstract class AbstractComponent<DataType, ConfigType extends Config>
   implements Component<DataType, ConfigType>
 {
-  protected element?: Selection<HTMLElement, any, null, undefined>;
+  protected element?: Selection<HTMLElement, undefined, any, undefined>;
 
   protected data?: DataType;
 

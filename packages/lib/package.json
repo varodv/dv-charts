@@ -33,16 +33,19 @@
   },
   "peerDependencies": {
     "d3-scale": "^4.0.0",
-    "d3-selection": "^3.0.0"
+    "d3-selection": "^3.0.0",
+    "d3-transition": "^3.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.4",
-    "@types/d3-scale": "^4.0.1",
-    "@types/d3-selection": "^3.0.1",
+    "@types/d3-scale": "^4.0.0",
+    "@types/d3-selection": "^3.0.0",
+    "@types/d3-transition": "^3.0.0",
     "@types/jest": "^26.0.24",
     "@types/node": "^16.4.5",
     "d3-scale": "^4.0.0",
     "d3-selection": "^3.0.0",
+    "d3-transition": "^3.0.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.0.6",
     "postcss": "^8.3.6",
