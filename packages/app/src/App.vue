@@ -1,30 +1,22 @@
 <template>
-  <div class="app-charts" ref="charts"></div>
+  <header>
+    <h1>app</h1>
+  </header>
+  <router-view />
 </template>
 
 <script lang="ts">
-  import { init } from 'dv-charts';
-
-  import { defineComponent, onMounted, ref } from 'vue';
+  import { defineComponent } from 'vue';
 
   export default defineComponent({
     name: 'App',
     setup: () => {
-      const charts = ref();
-
-      onMounted(() => {
-        init(charts.value);
-      });
-
-      return {
-        charts,
-      };
+      return {};
     },
   });
 </script>
 
 <style lang="scss">
-  .app-charts {
-    height: 100px;
+  #app {
   }
 </style>
