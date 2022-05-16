@@ -13,11 +13,9 @@
 </template>
 
 <script setup lang="ts">
-  import { Route } from '../router';
-
   const { routes } = defineProps({
     routes: {
-      type: Array as () => Array<Route>,
+      type: Array, // Array<Route>
       default: () => [],
     },
   });
