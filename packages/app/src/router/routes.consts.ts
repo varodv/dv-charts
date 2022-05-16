@@ -1,4 +1,4 @@
-export const ROUTER_CONSTS = {
+export const ROUTES_CONSTS = {
   names: {
     home: 'home',
   },

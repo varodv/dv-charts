@@ -1,14 +1,11 @@
 <template>
   <main :class="baseClass">
-    <h2>home</h2>
+    <h2>{{ baseClass }}</h2>
   </main>
 </template>
 
-<script setup>
+<script setup lang="ts">
   const baseClass = 'home';
 </script>
 
-<style lang="scss" scoped>
-  .home {
-  }
-</style>
+<style lang="scss" scoped></style>

@@ -1,3 +1,4 @@
-export { ROUTER } from './router';
-
-export { ROUTER_CONSTS } from './router.consts';
+export * from './router';
+export * from './routes';
+export * from './routes.consts';
+export * from './routes.types';
