@@ -1,10 +1,7 @@
 import { createRouter, createWebHistory, RouteLocationNormalized } from 'vue-router';
 
 import { ROUTES } from './routes';
-import { ROUTES_CONSTS } from './routes.consts';
 import { TransitionDirectionEnum } from './routes.types';
-
-const { names: NAMES } = ROUTES_CONSTS;
 
 export const ROUTER = createRouter({
   history: createWebHistory(),
@@ -12,7 +9,7 @@ export const ROUTER = createRouter({
     ...ROUTES,
     {
       path: '/:catchAll(.*)',
-      redirect: { name: NAMES.home },
+      redirect: { path: '/' },
     },
   ],
 });
