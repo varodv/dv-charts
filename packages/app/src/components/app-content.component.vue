@@ -46,6 +46,7 @@
       &-enter-active,
       &-leave-active {
         transition-property: transform, opacity;
+        transition-duration: 0.5s;
       }
 
       &-enter-from,

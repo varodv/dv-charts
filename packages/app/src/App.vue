@@ -33,7 +33,6 @@
     width: 100%;
     max-width: 1400px;
     margin: auto;
-    transition-duration: 0.5s;
   }
 
   .app-header {
