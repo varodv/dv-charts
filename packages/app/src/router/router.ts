@@ -17,11 +17,24 @@ export const ROUTER = createRouter({
   ],
 });
 
-ROUTER.afterEach((to: RouteLocationNormalized, from: RouteLocationNormalized): void => {
+const getDocumentTitle = (route: RouteLocationNormalized): string => {
+  const separator = ' | ';
+  let documentTitle = document.title.split(separator).pop() ?? '';
+  const routeTitle = String(route.name);
+  if (!!routeTitle) {
+    documentTitle = `${routeTitle}${separator}${documentTitle}`;
+  }
+  return documentTitle;
+};
+
+const getTransitionDirection = (
+  from: RouteLocationNormalized,
+  to: RouteLocationNormalized,
+): TransitionDirectionEnum | undefined => {
   let transitionDirection: TransitionDirectionEnum | undefined;
-  const indexOfTo = ROUTES.findIndex(({ name }) => name === to.matched[0].name);
   const indexOfFrom = ROUTES.findIndex(({ name }) => name === from.matched[0]?.name);
-  if (indexOfTo !== indexOfFrom && indexOfTo >= 0 && indexOfFrom >= 0) {
+  const indexOfTo = ROUTES.findIndex(({ name }) => name === to.matched[0]?.name);
+  if (indexOfFrom !== indexOfTo && indexOfFrom >= 0 && indexOfTo >= 0) {
     if (indexOfTo - indexOfFrom > 0) {
       transitionDirection = TransitionDirectionEnum.LEFT;
     } else {
@@ -30,5 +43,11 @@ ROUTER.afterEach((to: RouteLocationNormalized, from: RouteLocationNormalized): v
   } else {
     transitionDirection = undefined;
   }
-  to.meta.transitionDirection = transitionDirection;
+  return transitionDirection;
+};
+
+ROUTER.afterEach((to: RouteLocationNormalized, from: RouteLocationNormalized): void => {
+  document.title = getDocumentTitle(to);
+
+  to.meta.transitionDirection = getTransitionDirection(from, to);
 });
