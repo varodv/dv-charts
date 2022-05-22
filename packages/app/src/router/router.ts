@@ -17,6 +17,12 @@ export const ROUTER = createRouter({
   ],
 });
 
+ROUTER.afterEach((to: RouteLocationNormalized, from: RouteLocationNormalized): void => {
+  document.title = getDocumentTitle(to);
+
+  to.meta.transitionDirection = getTransitionDirection(from, to);
+});
+
 const getDocumentTitle = (route: RouteLocationNormalized): string => {
   const separator = ' | ';
   let documentTitle = document.title.split(separator).pop() ?? '';
@@ -45,9 +51,3 @@ const getTransitionDirection = (
   }
   return transitionDirection;
 };
-
-ROUTER.afterEach((to: RouteLocationNormalized, from: RouteLocationNormalized): void => {
-  document.title = getDocumentTitle(to);
-
-  to.meta.transitionDirection = getTransitionDirection(from, to);
-});
