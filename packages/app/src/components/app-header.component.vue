@@ -5,7 +5,7 @@
     </div>
     <ul :class="`${baseClass}__navigation-bar`">
       <li v-for="{ name } in props.routes" :key="name" :class="`${baseClass}__navigation-item`">
-        <router-link :class="`${baseClass}__link`" :to="{ name }" :active-class="`${baseClass}__link--active`">
+        <router-link :class="`${baseClass}__link`" :active-class="`${baseClass}__link--active`" :to="{ name }">
           {{ name }}
         </router-link>
       </li>
