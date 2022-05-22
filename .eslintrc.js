@@ -10,5 +10,12 @@ module.exports = {
     '@vue/prettier',
     '@vue/prettier/@typescript-eslint',
   ],
-  rules: {},
+  rules: {
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
+  },
 };
