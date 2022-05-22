@@ -1,19 +1,20 @@
 <template>
   <header :class="baseClass">
-    <router-link
-      v-for="{ name } in routes"
-      :key="name"
-      :class="[`${baseClass}__link`, `${baseClass}__link--route`]"
-      :active-class="`${baseClass}__link--active`"
-      :to="{ name }"
-    >
-      {{ name }}
-    </router-link>
+    <div :class="`${baseClass}__main`">
+      <router-link :class="`${baseClass}__link`" to="/">dv-charts</router-link>
+    </div>
+    <ul :class="`${baseClass}__navigation-bar`">
+      <li v-for="{ name } in props.routes" :key="name" :class="`${baseClass}__navigation-item`">
+        <router-link :class="`${baseClass}__link`" :to="{ name }" :active-class="`${baseClass}__link--active`">
+          {{ name }}
+        </router-link>
+      </li>
+    </ul>
   </header>
 </template>
 
 <script setup lang="ts">
-  const { routes } = defineProps({
+  const props = defineProps({
     routes: {
       type: Array, // Array<Route>
       default: () => [],
@@ -25,6 +26,16 @@
 
 <style lang="scss" scoped>
   .app-header {
+    display: flex;
+    align-items: center;
+
+    &__navigation-bar {
+      display: flex;
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+    }
+
     &__link {
       &--active {
         background-color: yellow;
