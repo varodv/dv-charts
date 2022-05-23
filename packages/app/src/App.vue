@@ -1,11 +1,16 @@
 <template>
-  <app-header class="app-header" :routes="ROUTES" />
+  <app-header class="app-header" :routes="ROUTES" :active-route-name="activeRouteName" />
   <app-content class="app-content" />
 </template>
 
 <script setup lang="ts">
+  import { computed } from 'vue';
+  import { useRoute } from 'vue-router';
+
   import { AppContent, AppHeader } from './components';
   import { ROUTES } from './router';
+
+  const activeRouteName = computed(() => useRoute().matched[0]?.name);
 </script>
 
 <style lang="scss">
@@ -38,6 +43,7 @@
   .app-header {
     position: sticky;
     top: 0;
+    z-index: 10;
   }
 
   .app-content {
