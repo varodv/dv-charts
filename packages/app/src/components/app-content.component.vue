@@ -1,10 +1,6 @@
 <template>
   <router-view v-slot="{ Component, route }">
-    <transition
-      :name="getTransitionName(route.meta.transitionDirection)"
-      @beforeLeave="setAbsolute"
-      @leaveCancelled="cleanUpTransitionStyles"
-    >
+    <transition :name="getTransitionName(route.meta.transitionDirection)" @beforeLeave="setAbsoluteStyles">
       <component :is="Component" :class="baseClass" />
     </transition>
   </router-view>
@@ -21,20 +17,12 @@
     return name;
   };
 
-  const setAbsolute = (element: HTMLElement): void => {
+  const setAbsoluteStyles = (element: HTMLElement): void => {
     const { top, left, width, height } = element.getBoundingClientRect();
-    element.style.setProperty('position', 'absolute');
     element.style.setProperty('top', `${top}px`);
     element.style.setProperty('left', `${left}px`);
     element.style.setProperty('width', `${width}px`);
     element.style.setProperty('height', `${height}px`);
-  };
-  const cleanUpTransitionStyles = (element: HTMLElement): void => {
-    element.style.removeProperty('position');
-    element.style.removeProperty('top');
-    element.style.removeProperty('left');
-    element.style.removeProperty('width');
-    element.style.removeProperty('height');
   };
 </script>
 
@@ -47,6 +35,10 @@
       &-leave-active {
         transition-property: transform, opacity;
         transition-duration: 0.5s;
+      }
+
+      &-leave-active {
+        position: absolute;
       }
 
       &-enter-from,
