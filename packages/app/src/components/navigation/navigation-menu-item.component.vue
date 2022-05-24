@@ -8,9 +8,9 @@
             <div v-show="isExactActive" :class="`${baseClass}__active-mark`" />
           </transition>
         </a>
-        <navigation-list
+        <navigation-menu
           v-if="!!route.children?.length"
-          :class="`${baseClass}__children-list`"
+          :class="`${baseClass}__children-menu`"
           :routes="route.children"
           :level="level + 1"
         />
@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-  import NavigationList from './navigation-list.component.vue';
+  import NavigationMenu from './navigation-menu.component.vue';
 
   const props = defineProps({
     route: {
@@ -33,11 +33,11 @@
     },
   });
 
-  const baseClass = 'navigation-item';
+  const baseClass = 'navigation-menu-item';
 </script>
 
 <style lang="scss" scoped>
-  .navigation-item {
+  .navigation-menu-item {
     &__link {
       position: relative;
       padding-left: 3px;

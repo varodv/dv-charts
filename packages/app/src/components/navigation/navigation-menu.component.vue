@@ -1,6 +1,6 @@
 <template>
   <ul :class="baseClass">
-    <navigation-item
+    <navigation-menu-item
       v-for="route in routes"
       :key="route.name"
       :class="`${baseClass}__item`"
@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-  import NavigationItem from './navigation-item.component.vue';
+  import NavigationMenuItem from './navigation-menu-item.component.vue';
 
   const props = defineProps({
     routes: {
@@ -24,11 +24,11 @@
     },
   });
 
-  const baseClass = 'navigation-list';
+  const baseClass = 'navigation-menu';
 </script>
 
 <style lang="scss" scoped>
-  .navigation-list {
+  .navigation-menu {
     padding: 0;
     margin: 0;
     list-style-type: none;

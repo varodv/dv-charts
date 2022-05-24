@@ -1,6 +1,6 @@
 <template>
   <main :class="baseClass">
-    <navigation-bar :class="`${baseClass}__navigation-bar`" :routes="DOCS_ROUTES" :level="1" />
+    <navigation-menu :class="`${baseClass}__navigation-menu`" :routes="DOCS_ROUTES" :level="1" />
     <router-view v-slot="{ Component }">
       <transition :name="`${baseClass}__content--animated`" mode="out-in">
         <component :is="Component" :class="`${baseClass}__content`" />
@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-  import { NavigationBar } from '../components';
+  import { NavigationMenu } from '../components';
   import { DOCS_ROUTES } from '../router';
 
   const baseClass = 'docs';
