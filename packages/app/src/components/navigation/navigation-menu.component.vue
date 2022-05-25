@@ -1,13 +1,15 @@
 <template>
-  <ul :class="baseClass">
-    <navigation-menu-item
-      v-for="route in routes"
-      :key="route.name"
-      :class="`${baseClass}__item`"
-      :route="route"
-      :level="level"
-    />
-  </ul>
+  <nav :class="baseClass">
+    <ul :class="`${baseClass}__list`">
+      <navigation-menu-item
+        v-for="route in routes"
+        :key="route.name"
+        :class="`${baseClass}__item`"
+        :route="route"
+        :level="level"
+      />
+    </ul>
+  </nav>
 </template>
 
 <script setup lang="ts">
@@ -29,8 +31,10 @@
 
 <style lang="scss" scoped>
   .navigation-menu {
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
+    &__list {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+    }
   }
 </style>
