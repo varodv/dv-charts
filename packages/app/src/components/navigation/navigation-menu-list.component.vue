@@ -1,30 +1,34 @@
 <template>
-  <div :class="`${baseClass}-wrapper`">
-    <router-link v-slot="{ href, navigate, isExactActive }" :to="{ name: route.name }" custom>
-      <li :class="baseClass">
+  <ul :class="baseClass">
+    <router-link
+      v-for="route in routes"
+      :key="route.name"
+      v-slot="{ href, navigate, isExactActive }"
+      :to="{ name: route.name }"
+      custom
+    >
+      <li :class="`${baseClass}__item`">
         <a :class="`${baseClass}__link`" :href="href" @click="navigate">
           {{ route.name }}
-          <transition :name="`${baseClass}__active-mark--animated`">
-            <div v-show="isExactActive" :class="`${baseClass}__active-mark`" />
+          <transition :name="`${baseClass}__active-item-mark--animated`">
+            <div v-show="isExactActive" :class="`${baseClass}__active-item-mark`" />
           </transition>
         </a>
-        <navigation-menu
+        <navigation-menu-list.component
           v-if="!!route.children?.length"
-          :class="`${baseClass}__children-menu`"
+          :class="`${baseClass}__children-list`"
           :routes="route.children"
           :level="level + 1"
         />
       </li>
     </router-link>
-  </div>
+  </ul>
 </template>
 
 <script setup lang="ts">
-  import NavigationMenu from './navigation-menu.component.vue';
-
   const props = defineProps({
-    route: {
-      type: Object, // Route
+    routes: {
+      type: Array, // Array<Route>
       required: true,
     },
     level: {
@@ -33,17 +37,21 @@
     },
   });
 
-  const baseClass = 'navigation-menu-item';
+  const baseClass = 'navigation-menu-list';
 </script>
 
 <style lang="scss" scoped>
-  .navigation-menu-item {
+  .navigation-menu-list {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+
     &__link {
       position: relative;
-      padding-left: 3px;
+      padding-left: 4px;
     }
 
-    &__active-mark {
+    &__active-item-mark {
       position: absolute;
       top: 0;
       left: 0;
