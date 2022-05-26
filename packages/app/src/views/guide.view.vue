@@ -1,7 +1,7 @@
 <template>
-  <section :class="baseClass">
-    <h3>{{ baseClass }}</h3>
-  </section>
+  <div :class="baseClass">
+    <h1>{{ baseClass }}</h1>
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -1,6 +1,6 @@
 <template>
   <main :class="baseClass">
-    <h2>{{ baseClass }}</h2>
+    <h1>{{ baseClass }}</h1>
   </main>
 </template>
 
