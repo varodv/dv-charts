@@ -10,8 +10,8 @@
       <li :class="`${baseClass}__item`">
         <a :class="`${baseClass}__link`" :href="href" @click="navigate">
           {{ route.name }}
-          <transition :name="`${baseClass}__active-item-mark--animated`">
-            <div v-show="isExactActive" :class="`${baseClass}__active-item-mark`" />
+          <transition :name="`${baseClass}__item-active-mark--animated`">
+            <div v-show="isExactActive" :class="`${baseClass}__item-active-mark`" />
           </transition>
         </a>
         <navigation-menu-list.component
@@ -51,7 +51,7 @@
       padding-left: 4px;
     }
 
-    &__active-item-mark {
+    &__item-active-mark {
       position: absolute;
       top: 0;
       left: 0;

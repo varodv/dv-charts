@@ -21,6 +21,7 @@
     display: flex;
 
     &__navigation-menu {
+      width: 250px;
     }
 
     &__content {
