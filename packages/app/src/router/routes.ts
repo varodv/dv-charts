@@ -3,11 +3,20 @@ import { Route } from './routes.types';
 
 const { names: NAMES } = ROUTES_CONSTS;
 
+export const COMPONENTS_ROUTES: Array<Route> = [];
+
 export const DOCS_ROUTES: Array<Route> = [
   {
     path: 'guide',
     name: NAMES.guide,
     component: () => import('../views/guide.view.vue'),
+  },
+  {
+    path: 'components',
+    name: NAMES.components,
+    component: () => import('../views/components.view.vue'),
+    children: COMPONENTS_ROUTES,
+    redirect: COMPONENTS_ROUTES[0],
   },
 ];
 
