@@ -1,12 +1,12 @@
 <template>
-  <main :class="baseClass">
+  <div :class="baseClass">
     <navigation-menu :class="`${baseClass}__navigation-menu`" :routes="DOCS_ROUTES" :level="1" />
     <router-view v-slot="{ Component }">
       <transition :name="`${baseClass}__content--animated`" mode="out-in">
         <component :is="Component" :class="`${baseClass}__content`" />
       </transition>
     </router-view>
-  </main>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -21,11 +21,18 @@
     display: flex;
 
     &__navigation-menu {
+      position: fixed;
+      z-index: 10;
+      top: 0;
       width: 250px;
+      height: 100vh;
+      padding-top: 30px;
+      overflow: auto;
     }
 
     &__content {
       flex-grow: 1;
+      padding-left: 250px;
 
       &--animated {
         &-enter-active,

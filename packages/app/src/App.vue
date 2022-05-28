@@ -14,39 +14,43 @@
 </script>
 
 <style lang="scss">
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
   html,
   body {
-    overflow: hidden;
     padding: 0;
     margin: 0;
   }
 
-  html,
-  body,
-  #app {
-    height: 100%;
+  html {
+    overflow: hidden scroll;
   }
 
   #app {
     display: flex;
     flex-direction: column;
-    overflow: hidden scroll;
+    align-items: center;
   }
 
   .app-header,
   .app-content {
     width: 100%;
     max-width: 1400px;
-    margin: auto;
   }
 
   .app-header {
-    position: sticky;
+    position: fixed;
+    z-index: 100;
     top: 0;
-    z-index: 10;
+    height: 30px;
   }
 
   .app-content {
-    flex-grow: 1;
+    min-height: 100vh;
+    padding-top: 30px;
   }
 </style>
