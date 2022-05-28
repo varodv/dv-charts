@@ -10,10 +10,11 @@
   const baseClass = 'app-content';
 
   const getTransitionName = (direction?: string): string => {
-    if (!direction) {
-      return;
+    let name = `${baseClass}--animated`;
+    if (!!direction) {
+      name += `-${direction}`;
     }
-    return `${baseClass}--animated-${direction}`;
+    return name;
   };
 
   const setAbsoluteStyles = (element: HTMLElement): void => {
