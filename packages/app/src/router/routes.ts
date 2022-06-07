@@ -10,6 +10,11 @@ export const DOCS_ROUTES: Array<Route> = [
     path: 'guide',
     name: NAMES.guide,
     component: () => import('../views/guide.view.vue'),
+    meta: {
+      messages: {
+        en: () => import('../i18n/guide/en.js'),
+      },
+    },
   },
   {
     path: 'components',
@@ -25,6 +30,11 @@ export const ROUTES: Array<Route> = [
     path: '/',
     name: NAMES.home,
     component: () => import('../views/home.view.vue'),
+    meta: {
+      messages: {
+        en: () => import('../i18n/home/en.js'),
+      },
+    },
   },
   {
     path: '/docs',

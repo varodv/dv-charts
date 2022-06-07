@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory, RouteLocationNormalized } from 'vue-router';
 
+import { useI18n } from '../stores';
 import { ROUTES } from './routes';
-import { TransitionDirectionEnum } from './routes.types';
+import { RouteMeta, TransitionDirectionEnum } from './routes.types';
 
 export const ROUTER = createRouter({
   history: createWebHistory(),
@@ -12,6 +13,22 @@ export const ROUTER = createRouter({
       redirect: { path: '/' },
     },
   ],
+});
+
+const storedMessageIds: Record<string, Array<string>> = {};
+ROUTER.beforeEach(async (to: RouteLocationNormalized): Promise<void> => {
+  const routeMeta = to.meta as RouteMeta;
+  const { locale, storeLocaleMessages } = useI18n();
+  const routeName = String(to.name);
+  if (!routeMeta.messages?.[locale] || storedMessageIds[locale]?.includes(routeName)) {
+    return;
+  }
+  const { default: messages } = await routeMeta.messages[locale]();
+  storeLocaleMessages(messages);
+  if (!storedMessageIds.hasOwnProperty(locale)) {
+    storedMessageIds[locale] = [];
+  }
+  storedMessageIds[locale].push(routeName);
 });
 
 ROUTER.afterEach((to: RouteLocationNormalized, from: RouteLocationNormalized): void => {
