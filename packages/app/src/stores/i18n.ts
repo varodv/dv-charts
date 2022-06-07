@@ -28,6 +28,25 @@ export const useI18n = defineStore('i18n', {
       }
       return supportedLocales[0];
     },
+    getMessage({ messages }: I18nState): (key: string) => string {
+      return (key: string): string => {
+        const getValue = (object: Record<string, any>, keys: Array<string>): any => {
+          const value = object[keys[0]];
+          if (keys.length === 1) {
+            return value;
+          }
+          if (typeof value === 'object') {
+            return getValue(value, keys.slice(1));
+          }
+        };
+        const message = getValue(messages[this.locale], key.split('.'));
+        if (!message || typeof message !== 'string') {
+          console.warn(`[useI18n().getMessage()] message not found ("${key}" in "${this.locale}")`);
+          return key;
+        }
+        return message;
+      };
+    },
   },
   actions: {
     storeLocaleMessages(messages: LocaleMessages, locale?: string): void {
