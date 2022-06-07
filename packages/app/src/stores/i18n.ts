@@ -1,11 +1,22 @@
 import { defineStore } from 'pinia';
 
-import { I18nState } from './i18n.types';
+import { I18nState, Messages } from './i18n.types';
 
 export const useI18n = defineStore('i18n', {
-  state: (): I18nState => ({
-    supportedLocales: ['en'],
-  }),
+  state: (): I18nState => {
+    const supportedLocales = ['en'];
+    const messages = supportedLocales.reduce(
+      (result: Messages, locale: string): Messages => ({
+        ...result,
+        [locale]: {},
+      }),
+      {},
+    );
+    return {
+      supportedLocales,
+      messages,
+    };
+  },
   getters: {
     locale({ supportedLocales }: I18nState): string {
       let locale = navigator.language;
