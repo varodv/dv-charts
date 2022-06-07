@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-import { I18nState, Messages } from './i18n.types';
+import { I18nState, LocaleMessages, Messages } from './i18n.types';
 
 export const useI18n = defineStore('i18n', {
   state: (): I18nState => {
@@ -27,6 +27,15 @@ export const useI18n = defineStore('i18n', {
         locale = locale.split('-').slice(0, -1).join('-');
       }
       return supportedLocales[0];
+    },
+  },
+  actions: {
+    storeLocaleMessages(messages: LocaleMessages, locale?: string): void {
+      if (!!locale && !this.supportedLocales.includes(locale)) {
+        console.error(`[useI18n().storeLocaleMessages()] locale not supported ("${locale}")`);
+        return;
+      }
+      Object.assign(this.messages[locale ?? this.locale], messages);
     },
   },
 });
