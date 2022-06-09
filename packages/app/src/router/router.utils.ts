@@ -55,8 +55,9 @@ export class RouterUtils {
     const separator = ' | ';
     let title = document.title.split(separator).pop() ?? '';
     const routeLabelFn = route.meta.label as (() => string) | undefined;
-    const routeLabel = routeLabelFn?.();
+    let routeLabel = routeLabelFn?.();
     if (!!routeLabel) {
+      routeLabel = `${routeLabel.charAt(0).toUpperCase()}${routeLabel.slice(1)}`;
       title = `${routeLabel}${separator}${title}`;
     }
     document.title = title;
