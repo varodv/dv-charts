@@ -5,6 +5,7 @@ export default {
       docs: 'documentation',
       guide: 'guide',
       components: 'components',
+      proportionalAreaChart: 'proportional area chart',
     },
   },
 };

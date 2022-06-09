@@ -4,5 +4,6 @@ export const ROUTES_CONSTS = {
     docs: 'docs',
     guide: 'guide',
     components: 'components',
+    proportionalAreaChart: 'proportionalAreaChart',
   },
 };
