@@ -7,14 +7,15 @@ export type Route = RouteRecordRaw & {
 
 export interface RouteMeta {
   label: () => string;
-  messages?: {
-    en: () => Promise<any>;
-    [locale: string]: () => Promise<any>;
-  };
-  transitionDirection?: TransitionDirectionEnum;
+  messages?: RouteMessages;
+  transitionDirection?: RouteTransitionDirectionEnum;
 }
 
-export enum TransitionDirectionEnum {
+export interface RouteMessages extends Record<string, () => Promise<any>> {
+  en: () => Promise<any>;
+}
+
+export enum RouteTransitionDirectionEnum {
   RIGHT = 'right',
   LEFT = 'left',
 }
