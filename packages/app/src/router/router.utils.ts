@@ -1,6 +1,7 @@
 import { RouteLocationNormalized } from 'vue-router';
 
 import { useI18n } from '../stores';
+import { StringUtils } from '../utils';
 import { ROUTES } from './routes';
 import { RouteMessages, RouteTransitionDirectionEnum } from './routes.types';
 
@@ -55,10 +56,9 @@ export class RouterUtils {
     const separator = ' | ';
     let title = document.title.split(separator).pop() ?? '';
     const routeLabelFn = route.meta.label as (() => string) | undefined;
-    let routeLabel = routeLabelFn?.();
+    const routeLabel = routeLabelFn?.();
     if (!!routeLabel) {
-      routeLabel = `${routeLabel.charAt(0).toUpperCase()}${routeLabel.slice(1)}`;
-      title = `${routeLabel}${separator}${title}`;
+      title = `${StringUtils.capitalize(routeLabel)}${separator}${title}`;
     }
     document.title = title;
   }

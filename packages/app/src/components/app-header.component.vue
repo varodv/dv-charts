@@ -12,7 +12,7 @@
           :class="`${baseClass}__navigation-item`"
         >
           <router-link :class="`${baseClass}__link`" :to="{ name }">
-            {{ label() }}
+            {{ StringUtils.capitalize(label()) }}
           </router-link>
         </li>
       </ul>
@@ -29,6 +29,8 @@
 
 <script setup lang="ts">
   import { onMounted, ref, watch } from 'vue';
+
+  import { StringUtils } from '../utils';
 
   const props = defineProps({
     routes: {

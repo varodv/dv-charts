@@ -9,7 +9,7 @@
     >
       <li :class="`${baseClass}__item`">
         <a :class="`${baseClass}__link`" :href="href" @click="navigate">
-          {{ route.meta.label() }}
+          {{ StringUtils.capitalize(route.meta.label()) }}
           <transition :name="`${baseClass}__item-active-mark--animated`">
             <div v-show="isExactActive" :class="`${baseClass}__item-active-mark`" />
           </transition>
@@ -26,6 +26,8 @@
 </template>
 
 <script setup lang="ts">
+  import { StringUtils } from '../../utils';
+
   const props = defineProps({
     routes: {
       type: Array, // Array<Route>
