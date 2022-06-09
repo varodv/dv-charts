@@ -1,3 +1,10 @@
 export default {
-  common: {},
+  common: {
+    routes: {
+      home: 'home',
+      docs: 'documentation',
+      guide: 'guide',
+      components: 'components',
+    },
+  },
 };

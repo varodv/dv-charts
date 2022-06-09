@@ -5,9 +5,14 @@
     </div>
     <nav ref="navigationBarEl" :class="`${baseClass}__navigation-bar`">
       <ul :class="`${baseClass}__navigation-items-list`">
-        <li v-for="{ name } in routes" :key="name" :data-id="name" :class="`${baseClass}__navigation-item`">
+        <li
+          v-for="{ name, meta: { label } } in routes"
+          :key="name"
+          :data-id="name"
+          :class="`${baseClass}__navigation-item`"
+        >
           <router-link :class="`${baseClass}__link`" :to="{ name }">
-            {{ name }}
+            {{ label() }}
           </router-link>
         </li>
       </ul>

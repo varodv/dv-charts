@@ -9,7 +9,7 @@
     >
       <li :class="`${baseClass}__item`">
         <a :class="`${baseClass}__link`" :href="href" @click="navigate">
-          {{ route.name }}
+          {{ route.meta.label() }}
           <transition :name="`${baseClass}__item-active-mark--animated`">
             <div v-show="isExactActive" :class="`${baseClass}__item-active-mark`" />
           </transition>
