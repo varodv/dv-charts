@@ -9,6 +9,7 @@
     "test": "jest",
     "build": "lerna run build"
   },
+  "dependencies": {},
   "devDependencies": {
     "@types/jest": "^26.0.24",
     "@types/node": "^16.4.5",
