@@ -32,10 +32,12 @@
     "build": "yarn run clean && yarn run compile"
   },
   "dependencies": {
-    "@types/d3-scale": "^4.0.2",
-    "@types/d3-selection": "^3.0.2",
-    "d3-scale": "^4.0.2",
-    "d3-selection": "^3.0.0"
+    "@types/d3-scale": "^4.0.0",
+    "@types/d3-selection": "^3.0.0",
+    "@types/d3-transition": "^3.0.0",
+    "d3-scale": "^4.0.0",
+    "d3-selection": "^3.0.0",
+    "d3-transition": "^3.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.4",
