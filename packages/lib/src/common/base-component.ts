@@ -10,7 +10,7 @@ export class BaseComponent<DataType, ConfigType extends ComponentConfig> {
   private resizeObserver: ResizeObserver;
   private resizeObserverInitialized = false;
 
-  protected constructor(protected element: HTMLElement, params?: ComponentParams<DataType, ConfigType>) {
+  public constructor(protected element: HTMLElement, params?: ComponentParams<DataType, ConfigType>) {
     this.data = params?.data;
     const config = this.getDefaultConfig();
     if (!!params?.config) {
@@ -35,13 +35,6 @@ export class BaseComponent<DataType, ConfigType extends ComponentConfig> {
       }
     });
     this.resizeObserver.observe(element);
-  }
-
-  public static create(
-    element: HTMLElement,
-    params?: ComponentParams<unknown, ComponentConfig>,
-  ): BaseComponent<unknown, ComponentConfig> {
-    return new BaseComponent(element, params);
   }
 
   public update(params: ComponentParams<DataType, ConfigType>): void {
