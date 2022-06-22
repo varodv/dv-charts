@@ -5,7 +5,7 @@ export type ProportionalAreaChartParams = ComponentParams<ProportionalAreaChartD
 export type ProportionalAreaChartData = Array<ProportionalAreaChartDataItem>;
 
 export interface ProportionalAreaChartDataItem {
-  id: string | number;
+  id: string;
   value: number;
 }
 
