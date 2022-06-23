@@ -1,11 +1,13 @@
 import { scaleLinear, scalePoint } from 'd3-scale';
-import { select, Selection } from 'd3-selection';
+import { EnterElement, select, Selection } from 'd3-selection';
+import 'd3-transition';
 
 import { BaseComponent } from '../common/base-component';
 import { Size } from '../common/component.types';
 import {
   ProportionalAreaChartConfig,
   ProportionalAreaChartData,
+  ProportionalAreaChartDataItem,
   ProportionalAreaChartParams,
 } from './proportional-area-chart.types';
 
@@ -87,6 +89,76 @@ export class ProportionalAreaChart extends BaseComponent<ProportionalAreaChartDa
   }
 
   private render(animate: boolean): void {
-    console.log('render', this.selections, animate); // TODO: implement method
+    const transitionsDuration = animate ? this.config.transitionsDuration : 0;
+    (
+      this.selections.svg.selectAll(`.${this.baseClass}__serie`) as Selection<
+        SVGGElement,
+        ProportionalAreaChartDataItem,
+        SVGSVGElement,
+        undefined
+      >
+    )
+      .data(this.data ?? [], ({ id }) => id)
+      .join(
+        (enterSeries) => this.enterSeries(enterSeries, transitionsDuration),
+        (updateSeries) => this.updateSeries(updateSeries, transitionsDuration),
+        (exitSeries) => this.exitSeries(exitSeries, transitionsDuration),
+      );
+  }
+
+  private enterSeries(
+    series: Selection<EnterElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
+    transitionsDuration: number,
+  ): Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined> {
+    const enterSeries = series.append('g').attr('class', `${this.baseClass}__serie`);
+    enterSeries.style('opacity', 0).transition().duration(transitionsDuration).style('opacity', 1);
+
+    enterSeries
+      .append('circle')
+      .attr('class', `${this.baseClass}__area`)
+      .attr('cx', this.getSerieCirclePositionX.bind(this))
+      .attr('cy', this.getSerieCirclePositionY())
+      .transition()
+      .duration(transitionsDuration)
+      .attr('r', this.getSerieCircleRadius.bind(this));
+
+    return enterSeries;
+  }
+
+  private getSerieCirclePositionX({ id }: ProportionalAreaChartDataItem): number {
+    return this.scales.position(id) ?? 0;
+  }
+
+  private getSerieCirclePositionY(): number {
+    return this.size.height / 2;
+  }
+
+  private getSerieCircleRadius({ value }: ProportionalAreaChartDataItem): number {
+    return this.scales.radius(value);
+  }
+
+  private updateSeries(
+    series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
+    transitionsDuration: number,
+  ): Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined> {
+    series.transition().duration(transitionsDuration).style('opacity', 1);
+
+    series
+      .select(`.${this.baseClass}__area`)
+      .transition()
+      .duration(transitionsDuration)
+      .attr('cx', this.getSerieCirclePositionX.bind(this))
+      .attr('cy', this.getSerieCirclePositionY())
+      .attr('r', this.getSerieCircleRadius.bind(this));
+
+    return series;
+  }
+
+  private exitSeries(
+    series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
+    transitionsDuration: number,
+  ): void {
+    series.transition().duration(transitionsDuration).style('opacity', 0);
+    series.transition().delay(transitionsDuration).remove();
   }
 }
