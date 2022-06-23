@@ -90,7 +90,7 @@ export class ProportionalAreaChart extends BaseComponent<ProportionalAreaChartDa
 
   private render(animate: boolean): void {
     const transitionsDuration = animate ? this.config.transitionsDuration : 0;
-    (
+    const series = (
       this.selections.svg.selectAll(`.${this.baseClass}__serie`) as Selection<
         SVGGElement,
         ProportionalAreaChartDataItem,
@@ -104,6 +104,8 @@ export class ProportionalAreaChart extends BaseComponent<ProportionalAreaChartDa
         (updateSeries) => this.updateSeries(updateSeries, transitionsDuration),
         (exitSeries) => this.exitSeries(exitSeries, transitionsDuration),
       );
+
+    this.sortSeries(series);
   }
 
   private enterSeries(
@@ -160,5 +162,9 @@ export class ProportionalAreaChart extends BaseComponent<ProportionalAreaChartDa
   ): void {
     series.transition().duration(transitionsDuration).style('opacity', 0);
     series.transition().delay(transitionsDuration).remove();
+  }
+
+  private sortSeries(series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>): void {
+    series.sort(({ value: value1 }, { value: value2 }) => value1 - value2);
   }
 }
