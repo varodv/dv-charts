@@ -2,7 +2,7 @@ import { scaleLinear, scalePoint } from 'd3-scale';
 import { EnterElement, select, Selection } from 'd3-selection';
 import 'd3-transition';
 
-import { BaseComponent } from '../common/base-component';
+import { Component } from '../common/component';
 import { Size } from '../common/component.types';
 import {
   ProportionalAreaChartConfig,
@@ -12,7 +12,7 @@ import {
   ProportionalAreaChartStyle,
 } from './proportional-area-chart.types';
 
-export class ProportionalAreaChart extends BaseComponent<
+export class ProportionalAreaChart extends Component<
   ProportionalAreaChartData,
   ProportionalAreaChartConfig,
   ProportionalAreaChartStyle

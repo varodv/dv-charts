@@ -1,6 +1,6 @@
 import { ComponentConfig, ComponentParams, ComponentStyle, Size } from './component.types';
 
-export abstract class BaseComponent<DataType, ConfigType extends ComponentConfig, StyleType extends ComponentStyle> {
+export abstract class Component<DataType, ConfigType extends ComponentConfig, StyleType extends ComponentStyle> {
   protected data: DataType | undefined;
 
   protected config: ConfigType;
