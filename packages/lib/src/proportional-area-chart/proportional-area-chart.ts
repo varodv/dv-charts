@@ -126,16 +126,19 @@ export class ProportionalAreaChart extends Component<
     transitionsDuration: number,
   ): Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined> {
     const enterSeries = series.append('g').attr('class', `${this.baseClass}__serie`);
-    enterSeries.style('opacity', 0).transition().duration(transitionsDuration).style('opacity', 1);
+    enterSeries
+      .style('translate3d', this.getSerieTranslate3d.bind(this))
+      .style('opacity', 0)
+      .transition()
+      .duration(transitionsDuration)
+      .style('opacity', 1);
 
     enterSeries
       .append('circle')
       .attr('class', `${this.baseClass}__area`)
-      .attr('cx', this.getSerieCirclePositionX.bind(this))
-      .attr('cy', this.getSerieCirclePositionY())
-      .style('fill', this.style.fill)
-      .style('stroke', this.style.stroke)
-      .style('stroke-width', this.style.strokeWidth)
+      .style('fill', (dataItem) => this.getSerieStyle(dataItem).fill)
+      .style('stroke', (dataItem) => this.getSerieStyle(dataItem).stroke)
+      .style('stroke-width', (dataItem) => this.getSerieStyle(dataItem).strokeWidth)
       .transition()
       .duration(transitionsDuration)
       .attr('r', this.getSerieCircleRadius.bind(this));
@@ -143,12 +146,17 @@ export class ProportionalAreaChart extends Component<
     return enterSeries;
   }
 
-  private getSerieCirclePositionX({ id }: ProportionalAreaChartDataItem): number {
-    return this.scales.position(id) ?? 0;
+  private getSerieTranslate3d({ id }: ProportionalAreaChartDataItem): string {
+    const positionX = this.scales.position(id) ?? 0;
+    const positionY = this.size.height / 2;
+    return `translate3d(${positionX}px, ${positionY}px, 0)`;
   }
 
-  private getSerieCirclePositionY(): number {
-    return this.size.height / 2;
+  private getSerieStyle({ style }: ProportionalAreaChartDataItem): ProportionalAreaChartStyle {
+    return {
+      ...this.style,
+      ...style,
+    };
   }
 
   private getSerieCircleRadius({ value }: ProportionalAreaChartDataItem): number {
@@ -159,18 +167,20 @@ export class ProportionalAreaChart extends Component<
     series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
     transitionsDuration: number,
   ): Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined> {
-    series.transition().duration(transitionsDuration).style('opacity', 1);
+    series
+      .transition()
+      .duration(transitionsDuration)
+      .style('translate3d', this.getSerieTranslate3d.bind(this))
+      .style('opacity', 1);
 
     series
       .select(`.${this.baseClass}__area`)
       .transition()
       .duration(transitionsDuration)
-      .attr('cx', this.getSerieCirclePositionX.bind(this))
-      .attr('cy', this.getSerieCirclePositionY())
       .attr('r', this.getSerieCircleRadius.bind(this))
-      .style('fill', this.style.fill)
-      .style('stroke', this.style.stroke)
-      .style('stroke-width', this.style.strokeWidth);
+      .style('fill', (dataItem) => this.getSerieStyle(dataItem).fill)
+      .style('stroke', (dataItem) => this.getSerieStyle(dataItem).stroke)
+      .style('stroke-width', (dataItem) => this.getSerieStyle(dataItem).strokeWidth);
 
     return series;
   }
