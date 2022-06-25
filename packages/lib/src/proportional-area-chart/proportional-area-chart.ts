@@ -11,8 +11,6 @@ import {
   ProportionalAreaChartParams,
 } from './proportional-area-chart.types';
 
-import './proportional-area-chart.scss';
-
 export class ProportionalAreaChart extends BaseComponent<ProportionalAreaChartData, ProportionalAreaChartConfig> {
   private readonly baseClass = 'dv-proportional-area-chart';
 

@@ -4,7 +4,4 @@ export default {
   ...base,
   roots: ['src'],
   testEnvironment: 'jsdom',
-  moduleNameMapper: {
-    '\\.scss$': 'identity-obj-proxy',
-  },
 };
