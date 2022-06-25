@@ -127,7 +127,7 @@ export class ProportionalAreaChart extends Component<
   ): Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined> {
     const enterSeries = series.append('g').attr('class', `${this.baseClass}__serie`);
     enterSeries
-      .style('translate3d', this.getSerieTranslate3d.bind(this))
+      .style('transform', this.getSerieTranslate3d.bind(this))
       .style('opacity', 0)
       .transition()
       .duration(transitionsDuration)
@@ -170,8 +170,8 @@ export class ProportionalAreaChart extends Component<
     series
       .transition()
       .duration(transitionsDuration)
-      .style('translate3d', this.getSerieTranslate3d.bind(this))
       .style('opacity', 1);
+      .style('transform', this.getSerieTranslate3d.bind(this))
 
     series
       .select(`.${this.baseClass}__area`)
