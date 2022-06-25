@@ -1,22 +1,29 @@
-import { ComponentConfig, ComponentParams, Size } from './component.types';
+import { ComponentConfig, ComponentParams, ComponentStyle, Size } from './component.types';
 
-export class BaseComponent<DataType, ConfigType extends ComponentConfig> {
+export abstract class BaseComponent<DataType, ConfigType extends ComponentConfig, StyleType extends ComponentStyle> {
   protected data: DataType | undefined;
 
   protected config: ConfigType;
+
+  protected style: StyleType;
 
   protected size: Size;
 
   private resizeObserver: ResizeObserver;
   private resizeObserverInitialized = false;
 
-  public constructor(protected element: HTMLElement, params?: ComponentParams<DataType, ConfigType>) {
+  public constructor(protected element: HTMLElement, params?: ComponentParams<DataType, ConfigType, StyleType>) {
     this.data = params?.data;
     const config = this.getDefaultConfig();
     if (!!params?.config) {
       Object.assign(config, params.config);
     }
     this.config = config;
+    const style = this.getDefaultStyle();
+    if (!!params?.style) {
+      Object.assign(style, params.style);
+    }
+    this.style = style;
 
     const { width, height } = element.getBoundingClientRect();
     this.size = {
@@ -37,12 +44,15 @@ export class BaseComponent<DataType, ConfigType extends ComponentConfig> {
     this.resizeObserver.observe(element);
   }
 
-  public update(params: ComponentParams<DataType, ConfigType>): void {
+  public update(params: ComponentParams<DataType, ConfigType, StyleType>): void {
     if (params.hasOwnProperty('data')) {
       this.data = params.data;
     }
     if (!!params.config) {
       Object.assign(this.config, params.config);
+    }
+    if (!!params.style) {
+      Object.assign(this.style, params.style);
     }
   }
 
@@ -55,6 +65,8 @@ export class BaseComponent<DataType, ConfigType extends ComponentConfig> {
       transitionsDuration: 500,
     } as ConfigType;
   }
+
+  protected abstract getDefaultStyle(): StyleType;
 
   protected resize(size: Size): void {
     this.size = size;

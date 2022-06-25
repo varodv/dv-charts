@@ -1,6 +1,10 @@
 import { ComponentConfig, ComponentParams } from '../common/component.types';
 
-export type ProportionalAreaChartParams = ComponentParams<ProportionalAreaChartData, ProportionalAreaChartConfig>;
+export type ProportionalAreaChartParams = ComponentParams<
+  ProportionalAreaChartData,
+  ProportionalAreaChartConfig,
+  ProportionalAreaChartStyle
+>;
 
 export type ProportionalAreaChartData = Array<ProportionalAreaChartDataItem>;
 
@@ -10,3 +14,9 @@ export interface ProportionalAreaChartDataItem {
 }
 
 export type ProportionalAreaChartConfig = ComponentConfig;
+
+export interface ProportionalAreaChartStyle {
+  fill: string;
+  stroke: string;
+  strokeWidth: string;
+}

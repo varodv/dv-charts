@@ -9,9 +9,14 @@ import {
   ProportionalAreaChartData,
   ProportionalAreaChartDataItem,
   ProportionalAreaChartParams,
+  ProportionalAreaChartStyle,
 } from './proportional-area-chart.types';
 
-export class ProportionalAreaChart extends BaseComponent<ProportionalAreaChartData, ProportionalAreaChartConfig> {
+export class ProportionalAreaChart extends BaseComponent<
+  ProportionalAreaChartData,
+  ProportionalAreaChartConfig,
+  ProportionalAreaChartStyle
+> {
   private readonly baseClass = 'dv-proportional-area-chart';
 
   private readonly selections: {
@@ -48,6 +53,14 @@ export class ProportionalAreaChart extends BaseComponent<ProportionalAreaChartDa
     this.setScalesDomain();
 
     this.render(true);
+  }
+
+  protected getDefaultStyle(): ProportionalAreaChartStyle {
+    return {
+      fill: 'lightcoral',
+      stroke: 'white',
+      strokeWidth: '1px',
+    };
   }
 
   protected resize(size: Size): void {
@@ -118,6 +131,9 @@ export class ProportionalAreaChart extends BaseComponent<ProportionalAreaChartDa
       .attr('class', `${this.baseClass}__area`)
       .attr('cx', this.getSerieCirclePositionX.bind(this))
       .attr('cy', this.getSerieCirclePositionY())
+      .style('fill', this.style.fill)
+      .style('stroke', this.style.stroke)
+      .style('stroke-width', this.style.strokeWidth)
       .transition()
       .duration(transitionsDuration)
       .attr('r', this.getSerieCircleRadius.bind(this));
@@ -149,7 +165,10 @@ export class ProportionalAreaChart extends BaseComponent<ProportionalAreaChartDa
       .duration(transitionsDuration)
       .attr('cx', this.getSerieCirclePositionX.bind(this))
       .attr('cy', this.getSerieCirclePositionY())
-      .attr('r', this.getSerieCircleRadius.bind(this));
+      .attr('r', this.getSerieCircleRadius.bind(this))
+      .style('fill', this.style.fill)
+      .style('stroke', this.style.stroke)
+      .style('stroke-width', this.style.strokeWidth);
 
     return series;
   }
