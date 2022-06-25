@@ -21,4 +21,5 @@ export interface ProportionalAreaChartStyle {
   fill: string;
   stroke: string;
   strokeWidth: string;
+  opacity: number;
 }

@@ -62,6 +62,7 @@ export class ProportionalAreaChart extends Component<
       fill: colors.primary,
       stroke: colors.background,
       strokeWidth: '1px',
+      opacity: 1,
     };
   }
 
@@ -131,7 +132,7 @@ export class ProportionalAreaChart extends Component<
       .style('opacity', 0)
       .transition()
       .duration(transitionsDuration)
-      .style('opacity', 1);
+      .style('opacity', (dataItem) => this.getSerieStyle(dataItem).opacity);
 
     enterSeries
       .append('circle')
@@ -170,8 +171,8 @@ export class ProportionalAreaChart extends Component<
     series
       .transition()
       .duration(transitionsDuration)
-      .style('opacity', 1);
       .style('transform', this.getSerieTranslate3d.bind(this))
+      .style('opacity', (dataItem) => this.getSerieStyle(dataItem).opacity);
 
     series
       .select(`.${this.baseClass}__area`)
