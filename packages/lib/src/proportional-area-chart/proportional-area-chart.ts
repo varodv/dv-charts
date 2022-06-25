@@ -4,6 +4,7 @@ import 'd3-transition';
 
 import { Component } from '../common/component';
 import { Size } from '../common/component.types';
+import { style } from '../common/style';
 import {
   ProportionalAreaChartConfig,
   ProportionalAreaChartData,
@@ -56,9 +57,10 @@ export class ProportionalAreaChart extends Component<
   }
 
   protected getDefaultStyle(): ProportionalAreaChartStyle {
+    const { colors } = style;
     return {
-      fill: 'lightcoral',
-      stroke: 'white',
+      fill: colors.primary,
+      stroke: colors.background,
       strokeWidth: '1px',
     };
   }
