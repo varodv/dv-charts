@@ -59,6 +59,8 @@ export class ProportionalAreaChart extends Component<
   protected getDefaultConfig(): ProportionalAreaChartConfig {
     return {
       ...super.getDefaultConfig(),
+      minValue: 0,
+      maxValue: 'max',
       minSize: 0,
     };
   }
@@ -82,23 +84,34 @@ export class ProportionalAreaChart extends Component<
   }
 
   private setScalesDomain(): void {
-    const dataIds = this.data?.map(({ id }) => id) ?? [];
-    this.scales.position.domain(dataIds);
+    const ids = this.data?.map(({ id }) => id) ?? [];
+    this.scales.position.domain(ids);
 
-    let dataMinValue: number | undefined = undefined,
-      dataMaxValue: number | undefined = undefined;
+    this.scales.size.domain([this.getMinValue(), this.getMaxValue()]);
+  }
+
+  private getMinValue(): number {
+    let dataMinValue: number | undefined = undefined;
     if (!!this.data?.length) {
-      ({ dataMinValue, dataMaxValue } = this.data.reduce(
-        (result, { value }) => ({
-          dataMinValue: Math.min(value, result.dataMinValue),
-          dataMaxValue: Math.max(value, result.dataMaxValue),
-        }),
-        { dataMinValue: Infinity, dataMaxValue: -Infinity },
-      ));
+      dataMinValue = this.data.reduce((result, { value }) => Math.min(value, result), Infinity);
     }
-    const minValue = dataMinValue !== undefined ? Math.min(dataMinValue, 0) : 0;
-    const maxValue = dataMaxValue || 1;
-    this.scales.size.domain([minValue, maxValue]);
+    let minValue = dataMinValue;
+    if (this.config.minValue !== 'min') {
+      minValue = Math.min(this.config.minValue, minValue ?? Infinity);
+    }
+    return minValue ?? 0;
+  }
+
+  private getMaxValue(): number {
+    let dataMaxValue: number | undefined = undefined;
+    if (!!this.data?.length) {
+      dataMaxValue = this.data.reduce((result, { value }) => Math.max(value, result), -Infinity);
+    }
+    let maxValue = dataMaxValue;
+    if (this.config.maxValue !== 'max') {
+      maxValue = Math.max(this.config.maxValue, maxValue ?? -Infinity);
+    }
+    return maxValue ?? 1;
   }
 
   private setScalesRange(): void {

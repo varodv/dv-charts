@@ -16,6 +16,8 @@ export interface ProportionalAreaChartDataItem {
 }
 
 export interface ProportionalAreaChartConfig extends ComponentConfig {
+  minValue: number | 'min';
+  maxValue: number | 'max';
   minSize: number;
 }
 
