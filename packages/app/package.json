@@ -9,6 +9,7 @@
   "dependencies": {
     "dv-charts": "0.0.0",
     "pinia": "^2.0.14",
+    "sass": "^1.53.0",
     "vue": "^3.2.36",
     "vue-router": "^4.0.14"
   },
