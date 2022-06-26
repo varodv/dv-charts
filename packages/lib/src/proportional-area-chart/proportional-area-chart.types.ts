@@ -15,7 +15,9 @@ export interface ProportionalAreaChartDataItem {
   style?: RequireAtLeastOne<ProportionalAreaChartStyle>;
 }
 
-export type ProportionalAreaChartConfig = ComponentConfig;
+export interface ProportionalAreaChartConfig extends ComponentConfig {
+  minSize: number;
+}
 
 export interface ProportionalAreaChartStyle {
   fill: string;

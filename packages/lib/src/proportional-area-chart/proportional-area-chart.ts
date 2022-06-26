@@ -27,7 +27,7 @@ export class ProportionalAreaChart extends Component<
 
   private readonly scales = {
     position: scalePoint(),
-    radius: scaleLinear(),
+    size: scaleLinear(),
   };
 
   public constructor(...args: [HTMLElement, ProportionalAreaChartParams]) {
@@ -54,6 +54,13 @@ export class ProportionalAreaChart extends Component<
     this.setScalesDomain();
 
     this.render(true);
+  }
+
+  protected getDefaultConfig(): ProportionalAreaChartConfig {
+    return {
+      ...super.getDefaultConfig(),
+      minSize: 0,
+    };
   }
 
   protected getDefaultStyle(): ProportionalAreaChartStyle {
@@ -91,15 +98,16 @@ export class ProportionalAreaChart extends Component<
     }
     const minValue = dataMinValue !== undefined ? Math.min(dataMinValue, 0) : 0;
     const maxValue = dataMaxValue || 1;
-    this.scales.radius.domain([minValue, maxValue]);
+    this.scales.size.domain([minValue, maxValue]);
   }
 
   private setScalesRange(): void {
     const { width, height } = this.size;
-    const maxRadius = Math.min(width, height) / 2;
-    this.scales.position.range([maxRadius, width - maxRadius]);
+    const maxSize = Math.min(width, height);
+    this.scales.position.range([maxSize / 2, width - maxSize / 2]);
 
-    this.scales.radius.range([0, maxRadius]);
+    const minSize = Math.min(this.config.minSize, maxSize);
+    this.scales.size.range([minSize, maxSize]);
   }
 
   private render(animate: boolean): void {
@@ -161,7 +169,7 @@ export class ProportionalAreaChart extends Component<
   }
 
   private getSerieCircleRadius({ value }: ProportionalAreaChartDataItem): number {
-    return this.scales.radius(value);
+    return this.scales.size(value) / 2;
   }
 
   private updateSeries(
