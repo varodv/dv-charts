@@ -9,6 +9,7 @@ import {
   ProportionalAreaChartConfig,
   ProportionalAreaChartData,
   ProportionalAreaChartDataItem,
+  ProportionalAreaChartHandlers,
   ProportionalAreaChartParams,
   ProportionalAreaChartStyle,
 } from './proportional-area-chart.types';
@@ -16,7 +17,8 @@ import {
 export class ProportionalAreaChart extends Component<
   ProportionalAreaChartData,
   ProportionalAreaChartConfig,
-  ProportionalAreaChartStyle
+  ProportionalAreaChartStyle,
+  ProportionalAreaChartHandlers
 > {
   private readonly baseClass = 'dv-proportional-area-chart';
 
@@ -30,8 +32,12 @@ export class ProportionalAreaChart extends Component<
     size: scaleLinear(),
   };
 
-  public constructor(...args: [HTMLElement, ProportionalAreaChartParams]) {
-    super(...args);
+  public constructor(args: {
+    element: HTMLElement;
+    params?: ProportionalAreaChartParams;
+    handlers?: ProportionalAreaChartHandlers;
+  }) {
+    super(args);
 
     const element = select(this.element) as Selection<HTMLElement, unknown, any, unknown>;
     element.attr('class', this.baseClass);
@@ -164,6 +170,13 @@ export class ProportionalAreaChart extends Component<
       .transition()
       .duration(transitionsDuration)
       .attr('r', this.getSerieCircleRadius.bind(this));
+
+    if (!!this.handlers) {
+      const handlers = this.handlers as ProportionalAreaChartHandlers;
+      if (!!handlers.click) {
+        enterSeries.on('click', (_event, dataItem) => handlers.click({ dataItem }));
+      }
+    }
 
     return enterSeries;
   }

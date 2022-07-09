@@ -27,3 +27,7 @@ export interface ProportionalAreaChartStyle {
   strokeWidth: string;
   opacity: number;
 }
+
+export type ProportionalAreaChartHandlers = RequireAtLeastOne<{
+  click: (payload: { dataItem: ProportionalAreaChartDataItem }) => void;
+}>;

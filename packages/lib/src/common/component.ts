@@ -1,18 +1,37 @@
 import { ComponentConfig, ComponentParams, ComponentStyle, Size } from './component.types';
 
-export abstract class Component<DataType, ConfigType extends ComponentConfig, StyleType extends ComponentStyle> {
+export abstract class Component<
+  DataType,
+  ConfigType extends ComponentConfig,
+  StyleType extends ComponentStyle,
+  HandlersType = void,
+> {
+  protected element: HTMLElement;
+
   protected data: DataType | undefined;
 
   protected config: ConfigType;
 
   protected style: StyleType;
 
+  protected handlers: HandlersType | undefined;
+
   protected size: Size;
 
   private resizeObserver: ResizeObserver;
   private resizeObserverInitialized = false;
 
-  public constructor(protected element: HTMLElement, params?: ComponentParams<DataType, ConfigType, StyleType>) {
+  public constructor({
+    element,
+    params,
+    handlers,
+  }: {
+    element: HTMLElement;
+    params?: ComponentParams<DataType, ConfigType, StyleType>;
+    handlers?: HandlersType;
+  }) {
+    this.element = element;
+
     this.data = params?.data;
     const config = this.getDefaultConfig();
     if (!!params?.config) {
@@ -24,6 +43,8 @@ export abstract class Component<DataType, ConfigType extends ComponentConfig, St
       Object.assign(style, params.style);
     }
     this.style = style;
+
+    this.handlers = handlers;
 
     const { width, height } = element.getBoundingClientRect();
     this.size = {
