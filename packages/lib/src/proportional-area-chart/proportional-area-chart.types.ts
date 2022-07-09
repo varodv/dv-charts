@@ -29,5 +29,11 @@ export interface ProportionalAreaChartStyle {
 }
 
 export type ProportionalAreaChartHandlers = RequireAtLeastOne<{
-  click: (payload: { dataItem: ProportionalAreaChartDataItem }) => void;
+  mouseenter: (payload: ProportionalAreaChartHandlerPayload) => void;
+  mouseleave: (payload: ProportionalAreaChartHandlerPayload) => void;
+  click: (payload: ProportionalAreaChartHandlerPayload) => void;
 }>;
+
+export interface ProportionalAreaChartHandlerPayload {
+  dataItem: ProportionalAreaChartDataItem;
+}

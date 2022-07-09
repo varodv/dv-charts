@@ -173,8 +173,14 @@ export class ProportionalAreaChart extends Component<
 
     if (!!this.handlers) {
       const handlers = this.handlers as ProportionalAreaChartHandlers;
+      if (!!handlers.mouseenter) {
+        enterSeries.on('mouseenter', (_event, dataItem) => handlers.mouseenter?.({ dataItem }));
+      }
+      if (!!handlers.mouseleave) {
+        enterSeries.on('mouseleave', (_event, dataItem) => handlers.mouseleave?.({ dataItem }));
+      }
       if (!!handlers.click) {
-        enterSeries.on('click', (_event, dataItem) => handlers.click({ dataItem }));
+        enterSeries.on('click', (_event, dataItem) => handlers.click?.({ dataItem }));
       }
     }
 
