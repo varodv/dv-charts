@@ -7,6 +7,9 @@
     "lint:script": "eslint **/*.{ts,js,vue} --quiet --fix",
     "lint:style": "stylelint **/*.{scss,css,vue} --quiet --fix",
     "test": "jest",
+    "link": "yarn workspace dv-charts link && yarn workspace dv-charts-app link dv-charts",
+    "dev:lib": "yarn workspace dv-charts run dev",
+    "dev:app": "yarn workspace dv-charts-app run dev",
     "build": "lerna run build"
   },
   "dependencies": {},

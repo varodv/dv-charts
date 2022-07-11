@@ -27,8 +27,9 @@
   ],
   "scripts": {
     "test": "jest",
-    "clean": "rimraf dist",
     "compile": "rollup --config",
+    "dev": "yarn run compile --watch",
+    "clean": "rimraf dist",
     "build": "yarn run clean && yarn run compile"
   },
   "dependencies": {
