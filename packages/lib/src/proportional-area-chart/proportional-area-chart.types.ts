@@ -1,4 +1,4 @@
-import { ComponentConfig, ComponentParams } from '../common/component.types';
+import { ComponentConfig, ComponentMouseHandlerPayload, ComponentParams } from '../common/component.types';
 import { RequireAtLeastOne } from '../common/require-at-least-one';
 
 export type ProportionalAreaChartParams = ComponentParams<
@@ -34,6 +34,6 @@ export type ProportionalAreaChartHandlers = RequireAtLeastOne<{
   click: (payload: ProportionalAreaChartHandlerPayload) => void;
 }>;
 
-export interface ProportionalAreaChartHandlerPayload {
+export interface ProportionalAreaChartHandlerPayload extends ComponentMouseHandlerPayload {
   dataItem: ProportionalAreaChartDataItem;
 }

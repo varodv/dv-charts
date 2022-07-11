@@ -20,3 +20,14 @@ export interface Size {
   width: number;
   height: number;
 }
+
+export interface ComponentMouseHandlerPayload {
+  targetDetails: ComponentMouseHandlerTargetDetails;
+}
+
+export type ComponentMouseHandlerTargetDetails = Position & Size;
+
+export interface Position {
+  x: number;
+  y: number;
+}

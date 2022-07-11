@@ -3,7 +3,7 @@ import { EnterElement, select, Selection } from 'd3-selection';
 import 'd3-transition';
 
 import { Component } from '../common/component';
-import { Size } from '../common/component.types';
+import { ComponentMouseHandlerTargetDetails, Size } from '../common/component.types';
 import { style } from '../common/style';
 import {
   ProportionalAreaChartConfig,
@@ -174,23 +174,44 @@ export class ProportionalAreaChart extends Component<
     if (!!this.handlers) {
       const handlers = this.handlers as ProportionalAreaChartHandlers;
       if (!!handlers.mouseenter) {
-        enterSeries.on('mouseenter', (_event, dataItem) => handlers.mouseenter?.({ dataItem }));
+        enterSeries.on('mouseenter', (_event, dataItem) =>
+          handlers.mouseenter?.({
+            dataItem,
+            targetDetails: this.getSerieHandlerTargetDetails(dataItem),
+          }),
+        );
       }
       if (!!handlers.mouseleave) {
-        enterSeries.on('mouseleave', (_event, dataItem) => handlers.mouseleave?.({ dataItem }));
+        enterSeries.on('mouseleave', (_event, dataItem) =>
+          handlers.mouseleave?.({
+            dataItem,
+            targetDetails: this.getSerieHandlerTargetDetails(dataItem),
+          }),
+        );
       }
       if (!!handlers.click) {
-        enterSeries.on('click', (_event, dataItem) => handlers.click?.({ dataItem }));
+        enterSeries.on('click', (_event, dataItem) =>
+          handlers.click?.({
+            dataItem,
+            targetDetails: this.getSerieHandlerTargetDetails(dataItem),
+          }),
+        );
       }
     }
 
     return enterSeries;
   }
 
-  private getSerieTranslate3d({ id }: ProportionalAreaChartDataItem): string {
-    const positionX = this.scales.position(id) ?? 0;
-    const positionY = this.size.height / 2;
-    return `translate3d(${positionX}px, ${positionY}px, 0)`;
+  private getSerieTranslate3d(dataItem: ProportionalAreaChartDataItem): string {
+    return `translate3d(${this.getSeriePositionX(dataItem)}px, ${this.getSeriePositionY()}px, 0)`;
+  }
+
+  private getSeriePositionX({ id }: ProportionalAreaChartDataItem): number {
+    return this.scales.position(id) ?? 0;
+  }
+
+  private getSeriePositionY(): number {
+    return this.size.height / 2;
   }
 
   private getSerieStyle({ style }: ProportionalAreaChartDataItem): ProportionalAreaChartStyle {
@@ -202,6 +223,16 @@ export class ProportionalAreaChart extends Component<
 
   private getSerieCircleRadius({ value }: ProportionalAreaChartDataItem): number {
     return this.scales.size(value) / 2;
+  }
+
+  private getSerieHandlerTargetDetails(dataItem: ProportionalAreaChartDataItem): ComponentMouseHandlerTargetDetails {
+    const circleRadius = this.getSerieCircleRadius(dataItem);
+    return {
+      x: this.getSeriePositionX(dataItem) - circleRadius,
+      y: this.getSeriePositionY() - circleRadius,
+      width: circleRadius * 2,
+      height: circleRadius * 2,
+    };
   }
 
   private updateSeries(
