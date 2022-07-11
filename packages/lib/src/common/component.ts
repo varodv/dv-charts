@@ -55,7 +55,7 @@ export abstract class Component<
       if (!this.resizeObserverInitialized) {
         this.resizeObserverInitialized = true;
       } else {
-        const { width, height } = entries.slice(-1)[0]!.contentRect;
+        const { width, height } = entries.slice(-1)[0]?.contentRect;
         this.resize({
           width,
           height,
