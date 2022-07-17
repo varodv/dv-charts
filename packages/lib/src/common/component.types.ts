@@ -10,9 +10,11 @@ export type ComponentParams<
   style: RequireAtLeastOne<StyleType>;
 }>;
 
-export interface ComponentConfig {
-  transitionsDuration: number;
+export interface ComponentConfig<DatumType = any> {
+  transitionsDuration: number | ComponentTransitionTimeFn<DatumType>;
 }
+
+export type ComponentTransitionTimeFn<DatumType = any> = (datum: DatumType, index: number) => number;
 
 export type ComponentStyle = Record<string, any>;
 

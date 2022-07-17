@@ -1,4 +1,4 @@
-import { ComponentConfig, ComponentParams, ComponentStyle, Size } from './component.types';
+import { ComponentConfig, ComponentParams, ComponentStyle, ComponentTransitionTimeFn, Size } from './component.types';
 
 export abstract class Component<
   DataType,
@@ -91,5 +91,11 @@ export abstract class Component<
 
   protected resize(size: Size): void {
     this.size = size;
+  }
+
+  protected getTransitionTimeFn<DatumType = any>(
+    value: number | ComponentTransitionTimeFn<DatumType>,
+  ): ComponentTransitionTimeFn<DatumType> {
+    return typeof value === 'number' ? () => value as number : (value as ComponentTransitionTimeFn<DatumType>);
   }
 }

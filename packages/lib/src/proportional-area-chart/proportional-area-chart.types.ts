@@ -1,4 +1,9 @@
-import { ComponentConfig, ComponentMouseHandlerPayload, ComponentParams } from '../common/component.types';
+import {
+  ComponentConfig,
+  ComponentMouseHandlerPayload,
+  ComponentParams,
+  ComponentTransitionTimeFn,
+} from '../common/component.types';
 import { RequireAtLeastOne } from '../common/require-at-least-one';
 
 export type ProportionalAreaChartParams = ComponentParams<
@@ -15,7 +20,8 @@ export interface ProportionalAreaChartDataItem {
   style?: RequireAtLeastOne<ProportionalAreaChartStyle>;
 }
 
-export interface ProportionalAreaChartConfig extends ComponentConfig {
+export interface ProportionalAreaChartConfig extends ComponentConfig<ProportionalAreaChartDataItem> {
+  transitionsDelay: number | ComponentTransitionTimeFn<ProportionalAreaChartDataItem>;
   minValue: number | 'min';
   maxValue: number | 'max';
   minSize: number;

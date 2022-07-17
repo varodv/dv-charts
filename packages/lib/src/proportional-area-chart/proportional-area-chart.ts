@@ -3,7 +3,7 @@ import { EnterElement, select, Selection } from 'd3-selection';
 import 'd3-transition';
 
 import { Component } from '../common/component';
-import { ComponentMouseHandlerTargetDetails, Size } from '../common/component.types';
+import { ComponentMouseHandlerTargetDetails, ComponentTransitionTimeFn, Size } from '../common/component.types';
 import { style } from '../common/style';
 import {
   ProportionalAreaChartConfig,
@@ -65,6 +65,7 @@ export class ProportionalAreaChart extends Component<
   protected getDefaultConfig(): ProportionalAreaChartConfig {
     return {
       ...super.getDefaultConfig(),
+      transitionsDelay: 0,
       minValue: 0,
       maxValue: 'max',
       minSize: 0,
@@ -130,7 +131,8 @@ export class ProportionalAreaChart extends Component<
   }
 
   private render(animate: boolean): void {
-    const transitionsDuration = animate ? this.config.transitionsDuration : 0;
+    const transitionsDelay = this.getTransitionTimeFn(animate ? this.config.transitionsDelay : 0);
+    const transitionsDuration = this.getTransitionTimeFn(animate ? this.config.transitionsDuration : 0);
     const series = (
       this.selections.svg.selectAll(`.${this.baseClass}__serie`) as Selection<
         SVGGElement,
@@ -141,9 +143,9 @@ export class ProportionalAreaChart extends Component<
     )
       .data(this.data ?? [], ({ id }) => id)
       .join(
-        (enterSeries) => this.enterSeries(enterSeries, transitionsDuration),
-        (updateSeries) => this.updateSeries(updateSeries, transitionsDuration),
-        (exitSeries) => this.exitSeries(exitSeries, transitionsDuration),
+        (enterSeries) => this.enterSeries(enterSeries, transitionsDelay, transitionsDuration),
+        (updateSeries) => this.updateSeries(updateSeries, transitionsDelay, transitionsDuration),
+        (exitSeries) => this.exitSeries(exitSeries, transitionsDelay, transitionsDuration),
       );
 
     this.sortSeries(series);
@@ -151,13 +153,15 @@ export class ProportionalAreaChart extends Component<
 
   private enterSeries(
     series: Selection<EnterElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
-    transitionsDuration: number,
+    transitionsDelay: ComponentTransitionTimeFn,
+    transitionsDuration: ComponentTransitionTimeFn,
   ): Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined> {
     const enterSeries = series.append('g').attr('class', `${this.baseClass}__serie`);
     enterSeries
       .style('transform', this.getSerieTranslate3d.bind(this))
       .style('opacity', 0)
       .transition()
+      .delay(transitionsDelay)
       .duration(transitionsDuration)
       .style('opacity', (dataItem) => this.getSerieStyle(dataItem).opacity);
 
@@ -168,6 +172,7 @@ export class ProportionalAreaChart extends Component<
       .style('stroke', (dataItem) => this.getSerieStyle(dataItem).stroke)
       .style('stroke-width', (dataItem) => this.getSerieStyle(dataItem).strokeWidth)
       .transition()
+      .delay(transitionsDelay)
       .duration(transitionsDuration)
       .attr('r', this.getSerieCircleRadius.bind(this));
 
@@ -237,10 +242,12 @@ export class ProportionalAreaChart extends Component<
 
   private updateSeries(
     series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
-    transitionsDuration: number,
+    transitionsDelay: ComponentTransitionTimeFn,
+    transitionsDuration: ComponentTransitionTimeFn,
   ): Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined> {
     series
       .transition()
+      .delay(transitionsDelay)
       .duration(transitionsDuration)
       .style('transform', this.getSerieTranslate3d.bind(this))
       .style('opacity', (dataItem) => this.getSerieStyle(dataItem).opacity);
@@ -248,6 +255,7 @@ export class ProportionalAreaChart extends Component<
     series
       .select(`.${this.baseClass}__area`)
       .transition()
+      .delay(transitionsDelay)
       .duration(transitionsDuration)
       .attr('r', this.getSerieCircleRadius.bind(this))
       .style('fill', (dataItem) => this.getSerieStyle(dataItem).fill)
@@ -259,10 +267,14 @@ export class ProportionalAreaChart extends Component<
 
   private exitSeries(
     series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
-    transitionsDuration: number,
+    transitionsDelay: ComponentTransitionTimeFn,
+    transitionsDuration: ComponentTransitionTimeFn,
   ): void {
-    series.transition().duration(transitionsDuration).style('opacity', 0);
-    series.transition().delay(transitionsDuration).remove();
+    series.transition().delay(transitionsDelay).duration(transitionsDuration).style('opacity', 0);
+    series
+      .transition()
+      .delay((dataItem, index) => transitionsDelay(dataItem, index) + transitionsDuration(dataItem, index))
+      .remove();
   }
 
   private sortSeries(series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>): void {
