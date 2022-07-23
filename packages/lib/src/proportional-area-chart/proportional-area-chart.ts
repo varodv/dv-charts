@@ -39,8 +39,8 @@ export class ProportionalAreaChart extends Component<
   }) {
     super(args);
 
+    this.element.classList.add(this.baseClass);
     const element = select(this.element) as Selection<HTMLElement, unknown, any, unknown>;
-    element.attr('class', this.baseClass);
     const svg = element.append('svg') as Selection<SVGSVGElement, undefined, HTMLElement, unknown>;
     svg.style('width', '100%').style('height', '100%');
     this.selections = {
@@ -79,6 +79,7 @@ export class ProportionalAreaChart extends Component<
       stroke: colors.background,
       strokeWidth: '1px',
       opacity: 1,
+      cursor: 'auto',
     };
   }
 
@@ -133,14 +134,7 @@ export class ProportionalAreaChart extends Component<
   private render(animate: boolean): void {
     const transitionsDelay = this.getTransitionTimeFn(animate ? this.config.transitionsDelay : 0);
     const transitionsDuration = this.getTransitionTimeFn(animate ? this.config.transitionsDuration : 0);
-    const series = (
-      this.selections.svg.selectAll(`.${this.baseClass}__serie`) as Selection<
-        SVGGElement,
-        ProportionalAreaChartDataItem,
-        SVGSVGElement,
-        undefined
-      >
-    )
+    const series = this.getSeries()
       .data(this.data ?? [], ({ id }) => id)
       .join(
         (enterSeries) => this.enterSeries(enterSeries, transitionsDelay, transitionsDuration),
@@ -149,6 +143,15 @@ export class ProportionalAreaChart extends Component<
       );
 
     this.sortSeries(series);
+  }
+
+  private getSeries(): Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined> {
+    return this.selections.svg.selectAll(`.${this.baseClass}__serie`) as Selection<
+      SVGGElement,
+      ProportionalAreaChartDataItem,
+      SVGSVGElement,
+      undefined
+    >;
   }
 
   private enterSeries(
@@ -160,6 +163,7 @@ export class ProportionalAreaChart extends Component<
     enterSeries
       .style('transform', this.getSerieTranslate3d.bind(this))
       .style('opacity', 0)
+      .style('cursor', (dataItem) => this.getSerieStyle(dataItem).cursor)
       .transition()
       .delay(transitionsDelay)
       .duration(transitionsDuration)
@@ -176,31 +180,36 @@ export class ProportionalAreaChart extends Component<
       .duration(transitionsDuration)
       .attr('r', this.getSerieCircleRadius.bind(this));
 
+    this.updateSeriesContentHtml(enterSeries);
+
     if (!!this.handlers) {
       const handlers = this.handlers as ProportionalAreaChartHandlers;
       if (!!handlers.mouseenter) {
-        enterSeries.on('mouseenter', (_event, dataItem) =>
+        enterSeries.on('mouseenter', (_event, dataItem) => {
           handlers.mouseenter?.({
             dataItem,
             targetDetails: this.getSerieHandlerTargetDetails(dataItem),
-          }),
-        );
+          });
+          this.updateSeriesContentHtml(this.getSeries());
+        });
       }
       if (!!handlers.mouseleave) {
-        enterSeries.on('mouseleave', (_event, dataItem) =>
+        enterSeries.on('mouseleave', (_event, dataItem) => {
           handlers.mouseleave?.({
             dataItem,
             targetDetails: this.getSerieHandlerTargetDetails(dataItem),
-          }),
-        );
+          });
+          this.updateSeriesContentHtml(this.getSeries());
+        });
       }
       if (!!handlers.click) {
-        enterSeries.on('click', (_event, dataItem) =>
+        enterSeries.on('click', (_event, dataItem) => {
           handlers.click?.({
             dataItem,
             targetDetails: this.getSerieHandlerTargetDetails(dataItem),
-          }),
-        );
+          });
+          this.updateSeriesContentHtml(this.getSeries());
+        });
       }
     }
 
@@ -230,6 +239,40 @@ export class ProportionalAreaChart extends Component<
     return this.scales.size(value) / 2;
   }
 
+  private updateSeriesContentHtml(
+    series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
+  ): void {
+    series.each((dataItem, index, nodes) => {
+      const contentHtml = this.config.contentHtml?.(dataItem, index);
+      const serie = select(nodes[index]) as Selection<SVGGElement, ProportionalAreaChartDataItem, null, undefined>;
+      let contentWrapper = serie.select(`.${this.baseClass}__serie-content-wrapper`) as Selection<
+        SVGForeignObjectElement,
+        ProportionalAreaChartDataItem,
+        null,
+        undefined
+      >;
+      if (!!contentHtml) {
+        if (contentWrapper.empty()) {
+          contentWrapper = serie
+            .append('foreignObject')
+            .attr('class', `${this.baseClass}__serie-content-wrapper`)
+            .style('overflow', 'visible');
+        }
+        const contentSize = this.getSerieCircleRadius(dataItem) * 2;
+        contentWrapper
+          .attr('x', -contentSize / 2)
+          .attr('y', -contentSize / 2)
+          .attr('width', contentSize)
+          .attr('height', contentSize)
+          .html(contentHtml);
+      } else {
+        if (!contentWrapper.empty()) {
+          contentWrapper.remove();
+        }
+      }
+    });
+  }
+
   private getSerieHandlerTargetDetails(dataItem: ProportionalAreaChartDataItem): ComponentMouseHandlerTargetDetails {
     const circleRadius = this.getSerieCircleRadius(dataItem);
     return {
@@ -246,6 +289,7 @@ export class ProportionalAreaChart extends Component<
     transitionsDuration: ComponentTransitionTimeFn,
   ): Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined> {
     series
+      .style('cursor', (dataItem) => this.getSerieStyle(dataItem).cursor)
       .transition()
       .delay(transitionsDelay)
       .duration(transitionsDuration)
@@ -261,6 +305,8 @@ export class ProportionalAreaChart extends Component<
       .style('fill', (dataItem) => this.getSerieStyle(dataItem).fill)
       .style('stroke', (dataItem) => this.getSerieStyle(dataItem).stroke)
       .style('stroke-width', (dataItem) => this.getSerieStyle(dataItem).strokeWidth);
+
+    this.updateSeriesContentHtml(series);
 
     return series;
   }
