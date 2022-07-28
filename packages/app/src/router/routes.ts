@@ -19,6 +19,7 @@ export const COMPONENTS_ROUTES: Array<Route> = [
 ];
 
 export const DOCS_ROUTES: Array<Route> = [
+  /* TODO: uncomment route when its view is implemented
   {
     path: 'guide',
     name: NAMES.guide,
@@ -29,7 +30,7 @@ export const DOCS_ROUTES: Array<Route> = [
         en: () => import('../i18n/guide/en.js'),
       },
     },
-  },
+  }, */
   {
     path: 'components',
     name: NAMES.components,
