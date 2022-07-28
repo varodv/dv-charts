@@ -8,6 +8,7 @@
       {{ getMessage('proportionalAreaChart.legend.text') }}
       <select
         :class="`${baseClass}__select ${baseClass}__select--year`"
+        :disabled="reloading"
         @change="selectedYear = Number($event.target.value)"
       >
         <option v-for="year in years" :key="year" :class="`${baseClass}__option`" :selected="year === selectedYear">
@@ -22,6 +23,14 @@
       >
         {{ getMessage('proportionalAreaChart.legend.source') }}
       </a>
+      -
+      <button
+        :class="`${baseClass}__button ${baseClass}__button--reload`"
+        :disabled="reloading"
+        @click="reloading = true"
+      >
+        {{ getMessage('proportionalAreaChart.legend.reload') }}
+      </button>
     </p>
   </main>
 </template>
@@ -97,6 +106,9 @@
   const years = Object.keys(data).map(Number);
   const selectedYear = ref(Number(years.at(-1)));
 
+  const reloading = ref(false);
+
+  const componentTransitionsDuration = 500;
   const componentParams = computed(() => {
     const componentData = data[selectedYear.value].map(({ company, revenue }) => ({
       id: company,
@@ -105,12 +117,14 @@
     return {
       data: componentData,
       config: {
+        transitionsDuration: componentTransitionsDuration,
         maxValue: dataMaxValue,
       },
     };
   });
 
   const componentEl = ref();
+  const componentInitialTransitionDelay = (_, index) => index * 100;
   let component: ProportionalAreaChart;
   onMounted(() => {
     component = new ProportionalAreaChart({
@@ -119,21 +133,36 @@
         ...componentParams.value,
         config: {
           ...componentParams.value.config,
-          transitionsDelay: (_, index) => index * 100,
+          transitionsDelay: componentInitialTransitionDelay,
         },
       },
     });
   });
   onBeforeUnmount(() => component.destroy());
 
-  watch(componentParams, (params) => {
+  watch(componentParams, (value) => {
     component.update({
-      ...params,
+      ...value,
       config: {
-        ...params,
+        ...value,
         transitionsDelay: 0,
       },
     });
+  });
+  watch(reloading, (value) => {
+    const componentData = value ? [] : componentParams.value.data;
+    const transitionsDelay = value ? 0 : componentInitialTransitionDelay;
+    component.update({
+      data: componentData,
+      config: {
+        transitionsDelay,
+      },
+    });
+    if (value) {
+      setTimeout(() => {
+        reloading.value = false;
+      }, componentTransitionsDuration);
+    }
   });
 </script>
 
