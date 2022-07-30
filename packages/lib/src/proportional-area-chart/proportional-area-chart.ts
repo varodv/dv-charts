@@ -241,6 +241,8 @@ export class ProportionalAreaChart extends Component<
 
   private updateSeriesContentHtml(
     series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
+    transitionsDelay: ComponentTransitionTimeFn = () => 0,
+    transitionsDuration: ComponentTransitionTimeFn = () => 0,
   ): void {
     series.each((dataItem, index, nodes) => {
       const contentHtml = this.config.contentHtml?.(dataItem, index);
@@ -260,11 +262,14 @@ export class ProportionalAreaChart extends Component<
         }
         const contentSize = this.getSerieCircleRadius(dataItem) * 2;
         contentWrapper
+          .html(contentHtml)
+          .transition()
+          .delay(transitionsDelay)
+          .duration(transitionsDuration)
           .attr('x', -contentSize / 2)
           .attr('y', -contentSize / 2)
           .attr('width', contentSize)
-          .attr('height', contentSize)
-          .html(contentHtml);
+          .attr('height', contentSize);
       } else {
         if (!contentWrapper.empty()) {
           contentWrapper.remove();
@@ -306,7 +311,7 @@ export class ProportionalAreaChart extends Component<
       .style('stroke', (dataItem) => this.getSerieStyle(dataItem).stroke)
       .style('stroke-width', (dataItem) => this.getSerieStyle(dataItem).strokeWidth);
 
-    this.updateSeriesContentHtml(series);
+    this.updateSeriesContentHtml(series, transitionsDelay, transitionsDuration);
 
     return series;
   }
