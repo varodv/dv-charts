@@ -40,6 +40,12 @@
   import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
 
+  import AlphabetLogo from '../../assets/img/logos/alphabet.svg';
+  import AmazonLogo from '../../assets/img/logos/amazon.svg';
+  import AppleLogo from '../../assets/img/logos/apple.svg';
+  import MetaLogo from '../../assets/img/logos/meta.svg';
+  import MicrosoftLogo from '../../assets/img/logos/microsoft.svg';
+
   import { useI18n } from '../../stores';
   import { StringUtils } from '../../utils';
 
@@ -117,6 +123,20 @@
       data: componentData,
       config: {
         maxValue: dataMaxValue,
+        contentHtml: ({ id }): string => {
+          const logo = {
+            Alphabet: () => AlphabetLogo,
+            Amazon: () => AmazonLogo,
+            Apple: () => AppleLogo,
+            Meta: () => MetaLogo,
+            Microsoft: () => MicrosoftLogo,
+          }[id]?.();
+          return `<div class="${baseClass}__component-content">
+            <figure class="${baseClass}__component-figure">
+              <img class="${baseClass}__component-image" src="${logo}" >
+            </figure>
+          </div>`;
+        },
       },
     };
   });
@@ -167,7 +187,35 @@
 <style lang="scss" scoped>
   .proportional-area-chart {
     &__component {
-      height: 160px;
+      height: 150px;
+    }
+  }
+</style>
+<style lang="scss">
+  .proportional-area-chart {
+    &__component-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+
+    &__component-figure {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50%;
+      height: 50%;
+      max-height: 50px;
+      margin: 0;
+    }
+
+    &__component-image {
+      max-width: 100%;
+      max-height: 100%;
+      filter: brightness(0) invert(1);
     }
   }
 </style>
