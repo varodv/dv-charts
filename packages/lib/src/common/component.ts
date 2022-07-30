@@ -65,6 +65,14 @@ export abstract class Component<
     this.resizeObserver.observe(element);
   }
 
+  public getDefaultConfig(): ConfigType {
+    return {
+      transitionsDuration: 500,
+    } as ConfigType;
+  }
+
+  public abstract getDefaultStyle(): StyleType;
+
   public update(params: ComponentParams<DataType, ConfigType, StyleType>): void {
     if (params.hasOwnProperty('data')) {
       this.data = params.data;
@@ -80,14 +88,6 @@ export abstract class Component<
   public destroy(): void {
     this.resizeObserver.disconnect();
   }
-
-  protected getDefaultConfig(): ConfigType {
-    return {
-      transitionsDuration: 500,
-    } as ConfigType;
-  }
-
-  protected abstract getDefaultStyle(): StyleType;
 
   protected resize(size: Size): void {
     this.size = size;

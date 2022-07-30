@@ -54,15 +54,7 @@ export class ProportionalAreaChart extends Component<
     this.render(true);
   }
 
-  public update(params: ProportionalAreaChartParams): void {
-    super.update(params);
-
-    this.setScalesDomain();
-
-    this.render(true);
-  }
-
-  protected getDefaultConfig(): ProportionalAreaChartConfig {
+  public getDefaultConfig(): ProportionalAreaChartConfig {
     return {
       ...super.getDefaultConfig(),
       transitionsDelay: 0,
@@ -72,7 +64,7 @@ export class ProportionalAreaChart extends Component<
     };
   }
 
-  protected getDefaultStyle(): ProportionalAreaChartStyle {
+  public getDefaultStyle(): ProportionalAreaChartStyle {
     const { colors } = style;
     return {
       fill: colors.primary,
@@ -81,6 +73,14 @@ export class ProportionalAreaChart extends Component<
       opacity: 1,
       cursor: 'auto',
     };
+  }
+
+  public update(params: ProportionalAreaChartParams): void {
+    super.update(params);
+
+    this.setScalesDomain();
+
+    this.render(true);
   }
 
   protected resize(size: Size): void {

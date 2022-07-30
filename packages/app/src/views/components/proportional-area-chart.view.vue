@@ -108,7 +108,6 @@
 
   const reloading = ref(false);
 
-  const componentTransitionsDuration = 500;
   const componentParams = computed(() => {
     const componentData = data[selectedYear.value].map(({ company, revenue }) => ({
       id: company,
@@ -117,7 +116,6 @@
     return {
       data: componentData,
       config: {
-        transitionsDuration: componentTransitionsDuration,
         maxValue: dataMaxValue,
       },
     };
@@ -161,7 +159,7 @@
     if (value) {
       setTimeout(() => {
         reloading.value = false;
-      }, componentTransitionsDuration);
+      }, component.getDefaultConfig().transitionsDuration);
     }
   });
 </script>
