@@ -5,7 +5,7 @@
     </h1>
     <div ref="componentEl" :class="`${baseClass}__component`" />
     <p :class="`${baseClass}__legend`">
-      {{ getMessage('proportionalAreaChart.legend.text') }}
+      {{ getMessage('proportionalAreaChart.example.legend') }}
       <select
         :class="`${baseClass}__select ${baseClass}__select--year`"
         :disabled="reloading"
@@ -21,7 +21,7 @@
         href="https://www.visualcapitalist.com/how-big-tech-makes-their-billions-2022/"
         target="_blank"
       >
-        {{ getMessage('proportionalAreaChart.legend.source') }}
+        {{ getMessage('proportionalAreaChart.example.source') }}
       </a>
       -
       <button
@@ -29,7 +29,7 @@
         :disabled="reloading"
         @click="reloading = true"
       >
-        {{ getMessage('proportionalAreaChart.legend.reload') }}
+        {{ getMessage('proportionalAreaChart.example.reload') }}
       </button>
     </p>
   </main>
@@ -49,7 +49,7 @@
   import { useI18n } from '../../stores';
   import { StringUtils } from '../../utils';
 
-  const { getMessage } = useI18n();
+  const { getMessage, locale } = useI18n();
 
   const baseClass = 'proportional-area-chart';
 
@@ -123,7 +123,7 @@
       data: componentData,
       config: {
         maxValue: dataMaxValue,
-        contentHtml: ({ id }): string => {
+        contentHtml: ({ id, value }): string => {
           const logo = {
             Alphabet: () => AlphabetLogo,
             Amazon: () => AmazonLogo,
@@ -131,10 +131,21 @@
             Meta: () => MetaLogo,
             Microsoft: () => MicrosoftLogo,
           }[id]?.();
+          const valueText = getMessage('proportionalAreaChart.example.value', {
+            value: value.toLocaleString(locale),
+          });
           return `<div class="${baseClass}__component-content">
             <figure class="${baseClass}__component-figure">
               <img class="${baseClass}__component-image" src="${logo}" >
             </figure>
+            <div class="${baseClass}__component-text-container">
+              <span class="${baseClass}__component-text ${baseClass}__component-text--id">
+                ${id}
+              </span>
+              <span class="${baseClass}__component-text ${baseClass}__component-text--value">
+                ${valueText}
+              </span>
+            </div>
           </div>`;
         },
       },
@@ -194,6 +205,7 @@
 <style lang="scss">
   .proportional-area-chart {
     &__component-content {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -216,6 +228,25 @@
       max-width: 100%;
       max-height: 100%;
       filter: brightness(0) invert(1);
+    }
+
+    &__component-text-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(white, 0.75);
+      opacity: 0;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 1;
+      }
     }
   }
 </style>
