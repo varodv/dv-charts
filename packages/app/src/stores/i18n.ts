@@ -28,8 +28,8 @@ export const useI18n = defineStore('i18n', {
       }
       return supportedLocales[0];
     },
-    getMessage({ messages }: I18nState): (key: string) => string {
-      return (key: string): string => {
+    getMessage({ messages }: I18nState) {
+      return (key: string, replace?: Record<string, string>): string => {
         const getValue = (object: Record<string, any>, keys: Array<string>): any => {
           const value = object[keys[0]];
           if (keys.length === 1) {
@@ -39,10 +39,15 @@ export const useI18n = defineStore('i18n', {
             return getValue(value, keys.slice(1));
           }
         };
-        const message = getValue(messages[this.locale], key.split('.'));
+        let message = getValue(messages[this.locale], key.split('.'));
         if (!message || typeof message !== 'string') {
           console.warn(`[useI18n().getMessage()] message not found ("${key}" in "${this.locale}")`);
           return key;
+        }
+        if (!!replace) {
+          message = Object.entries(replace).reduce((result, [replaceKey, replaceValue]) => {
+            return result.replace(`{${replaceKey}}`, replaceValue);
+          }, message);
         }
         return message;
       };
