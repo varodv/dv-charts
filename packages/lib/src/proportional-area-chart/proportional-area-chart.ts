@@ -329,6 +329,10 @@ export class ProportionalAreaChart extends Component<
   }
 
   private sortSeries(series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>): void {
-    series.sort(({ value: value1 }, { value: value2 }) => value1 - value2);
+    series.sort(({ id: id1 }, { id: id2 }) => {
+      const index1 = this.data!.findIndex(({ id }) => id === id1);
+      const index2 = this.data!.findIndex(({ id }) => id === id2);
+      return index2 - index1;
+    });
   }
 }
