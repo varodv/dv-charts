@@ -42,7 +42,7 @@ export class ProportionalAreaChart extends Component<
     this.element.classList.add(this.baseClass);
     const element = select(this.element) as Selection<HTMLElement, unknown, any, unknown>;
     const svg = element.append('svg') as Selection<SVGSVGElement, undefined, HTMLElement, unknown>;
-    svg.style('width', '100%').style('height', '100%');
+    svg.style('width', '100%').style('height', '100%').style('overflow', 'visible');
     this.selections = {
       element,
       svg,
@@ -190,7 +190,6 @@ export class ProportionalAreaChart extends Component<
             dataItem,
             targetDetails: this.getSerieHandlerTargetDetails(dataItem),
           });
-          this.updateSeriesContentHtml(this.getSeries());
         });
       }
       if (!!handlers.mouseleave) {
@@ -199,7 +198,6 @@ export class ProportionalAreaChart extends Component<
             dataItem,
             targetDetails: this.getSerieHandlerTargetDetails(dataItem),
           });
-          this.updateSeriesContentHtml(this.getSeries());
         });
       }
       if (!!handlers.click) {
@@ -208,7 +206,6 @@ export class ProportionalAreaChart extends Component<
             dataItem,
             targetDetails: this.getSerieHandlerTargetDetails(dataItem),
           });
-          this.updateSeriesContentHtml(this.getSeries());
         });
       }
     }
@@ -260,9 +257,11 @@ export class ProportionalAreaChart extends Component<
             .attr('class', `${this.baseClass}__serie-content-wrapper`)
             .style('overflow', 'visible');
         }
+        if (contentHtml !== contentWrapper.html()) {
+          contentWrapper.html(contentHtml);
+        }
         const contentSize = this.getSerieCircleRadius(dataItem) * 2;
         contentWrapper
-          .html(contentHtml)
           .transition()
           .delay(transitionsDelay)
           .duration(transitionsDuration)
