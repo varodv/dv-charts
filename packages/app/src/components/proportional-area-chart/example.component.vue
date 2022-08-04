@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
   import { ProportionalAreaChart, style } from 'dv-charts';
-  import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+  import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
   import AlphabetLogo from '../../assets/img/logos/alphabet.svg';
   import AmazonLogo from '../../assets/img/logos/amazon.svg';
@@ -114,6 +114,24 @@
 
   const reloading = ref(false);
 
+  const componentParams = computed(() => {
+    const data = rawData[selectedYear.value].map(({ company, revenue }) => {
+      return {
+        id: company,
+        value: revenue,
+        style: getDataItemStyle(company),
+      };
+    });
+    const config = {
+      maxValue,
+      contentHtml: getContentHtml,
+    };
+    return {
+      data,
+      config,
+    };
+  });
+
   const getDataItemStyle = (id: string) => {
     const { primary, background } = style.colors;
     return {
@@ -150,32 +168,13 @@
     </div>`;
   };
 
-  const getComponentParams = () => {
-    const data = rawData[selectedYear.value].map(({ company, revenue }) => {
-      return {
-        id: company,
-        value: revenue,
-        style: getDataItemStyle(company),
-      };
-    });
-    const config = {
-      maxValue,
-      contentHtml: getContentHtml,
-    };
-    return {
-      data,
-      config,
-    };
-  };
-
   onMounted(() => {
-    const componentParams = getComponentParams();
     component = new ProportionalAreaChart({
       element: componentEl.value,
       params: {
-        ...componentParams,
+        ...componentParams.value,
         config: {
-          ...componentParams.config,
+          ...componentParams.value.config,
           transitionsDelay: initialTransitionDelay,
         },
       },
@@ -189,12 +188,11 @@
   onBeforeUnmount(() => component.destroy());
 
   watch(selectedYear, () => {
-    const componentParams = getComponentParams();
     const { transitionsDuration } = component.getDefaultConfig();
     component.update({
-      ...componentParams,
+      ...componentParams.value,
       config: {
-        ...componentParams.config,
+        ...componentParams.value.config,
         transitionsDuration,
         transitionsDelay: 0,
       },
@@ -202,11 +200,10 @@
   });
 
   watch(hoveredDataItemId, () => {
-    const componentParams = getComponentParams();
     component.update({
-      ...componentParams,
+      ...componentParams.value,
       config: {
-        ...componentParams.config,
+        ...componentParams.value.config,
         transitionsDuration: mouseTransitionsDuration,
         transitionsDelay: 0,
       },
@@ -214,7 +211,7 @@
   });
 
   watch(reloading, (value) => {
-    const data = value ? [] : getComponentParams().data;
+    const data = value ? [] : componentParams.value.data;
     const { transitionsDuration } = component.getDefaultConfig();
     const transitionsDelay = value ? 0 : initialTransitionDelay;
     component.update({
