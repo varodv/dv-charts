@@ -328,10 +328,19 @@ export class ProportionalAreaChart extends Component<
   }
 
   private sortSeries(series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>): void {
+    const data = this.data ?? [];
+    const areAlreadySorted = series.nodes().every((node, index) => {
+      const { id } = (select(node) as Selection<SVGGElement, ProportionalAreaChartDataItem, null, undefined>).datum();
+      const dataIndex = data.findIndex(({ id: dataId }) => dataId === id);
+      return index === dataIndex;
+    });
+    if (areAlreadySorted) {
+      return;
+    }
     series.sort(({ id: id1 }, { id: id2 }) => {
-      const index1 = this.data!.findIndex(({ id }) => id === id1);
-      const index2 = this.data!.findIndex(({ id }) => id === id2);
-      return index2 - index1;
+      const dataIndex1 = data.findIndex(({ id: dataId }) => dataId === id1);
+      const dataIndex2 = data.findIndex(({ id: dataId }) => dataId === id2);
+      return dataIndex2 - dataIndex1;
     });
   }
 }
