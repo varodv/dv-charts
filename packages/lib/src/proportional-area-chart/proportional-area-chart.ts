@@ -182,33 +182,7 @@ export class ProportionalAreaChart extends Component<
 
     this.updateSeriesContentHtml(enterSeries);
 
-    if (!!this.handlers) {
-      const handlers = this.handlers as ProportionalAreaChartHandlers;
-      if (!!handlers.mouseenter) {
-        enterSeries.on('mouseenter', (_event, dataItem) => {
-          handlers.mouseenter?.({
-            dataItem,
-            targetDetails: this.getSerieHandlerTargetDetails(dataItem),
-          });
-        });
-      }
-      if (!!handlers.mouseleave) {
-        enterSeries.on('mouseleave', (_event, dataItem) => {
-          handlers.mouseleave?.({
-            dataItem,
-            targetDetails: this.getSerieHandlerTargetDetails(dataItem),
-          });
-        });
-      }
-      if (!!handlers.click) {
-        enterSeries.on('click', (_event, dataItem) => {
-          handlers.click?.({
-            dataItem,
-            targetDetails: this.getSerieHandlerTargetDetails(dataItem),
-          });
-        });
-      }
-    }
+    this.addSeriesHandlers(enterSeries);
 
     return enterSeries;
   }
@@ -274,6 +248,55 @@ export class ProportionalAreaChart extends Component<
           contentWrapper.remove();
         }
       }
+    });
+  }
+
+  private addSeriesHandlers(
+    series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
+  ): void {
+    series.on('mouseenter', (_event, dataItem) => {
+      this.getSeries().classed('dv-hovered', ({ id }) => id === dataItem.id);
+
+      this.handlers?.mouseenter?.({
+        dataItem,
+        targetDetails: this.getSerieHandlerTargetDetails(dataItem),
+      });
+    });
+
+    series.on('mouseleave', (_event, dataItem) => {
+      this.getSeries().classed('dv-hovered', false);
+
+      this.handlers?.mouseleave?.({
+        dataItem,
+        targetDetails: this.getSerieHandlerTargetDetails(dataItem),
+      });
+    });
+
+    series.on('click', (_event, dataItem) => {
+      this.getSeries().each(({ id }, index, nodes) => {
+        const serie = select(nodes[index]);
+        const isClickedSerie = id === dataItem.id;
+        serie
+          .classed('dv-clicked', isClickedSerie || serie.classed('dv-clicked'))
+          .classed('dv-clicked-first', () => {
+            if (isClickedSerie) {
+              return serie.classed('dv-clicked-first') || this.selections.svg.selectAll('.dv-clicked-first').empty();
+            }
+            return serie.classed('dv-clicked-first');
+          })
+          .classed('dv-clicked-last', isClickedSerie)
+          .classed('dv-clicked-toggle', () => {
+            if (isClickedSerie) {
+              return !serie.classed('dv-clicked-toggle');
+            }
+            return serie.classed('dv-clicked-toggle');
+          });
+      });
+
+      this.handlers?.click?.({
+        dataItem,
+        targetDetails: this.getSerieHandlerTargetDetails(dataItem),
+      });
     });
   }
 
