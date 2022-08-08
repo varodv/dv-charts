@@ -111,6 +111,7 @@
   const mouseTransitionsDuration = 200;
 
   const hoveredDataItemId = ref(undefined);
+  const selectedDataItemIds = ref([]);
 
   const reloading = ref(false);
 
@@ -133,12 +134,29 @@
   });
 
   const getDataItemStyle = (id: string) => {
-    const { primary, background } = style.colors;
-    return {
-      ...(id !== hoveredDataItemId.value
-        ? { fill: primary, stroke: background }
-        : { fill: background, stroke: primary }),
+    const { primary, secondary, background } = style.colors;
+    const baseStyle = {
       cursor: 'pointer',
+    };
+    if (selectedDataItemIds.value.includes(id)) {
+      return {
+        ...baseStyle,
+        fill: background,
+        stroke: secondary,
+        strokeWidth: '2px',
+      };
+    }
+    if (id === hoveredDataItemId.value) {
+      return {
+        ...baseStyle,
+        fill: background,
+        stroke: primary,
+      };
+    }
+    return {
+      ...baseStyle,
+      fill: primary,
+      stroke: background,
     };
   };
 
@@ -168,6 +186,15 @@
     </div>`;
   };
 
+  const onDataItemClick = ({ dataItem: { id } }) => {
+    const indexOfSelectedId = selectedDataItemIds.value.indexOf(id);
+    if (indexOfSelectedId < 0) {
+      selectedDataItemIds.value.push(id);
+    } else {
+      selectedDataItemIds.value.splice(indexOfSelectedId, 1);
+    }
+  };
+
   onMounted(() => {
     component = new ProportionalAreaChart({
       element: componentEl.value,
@@ -181,6 +208,7 @@
       handlers: {
         mouseenter: ({ dataItem: { id } }) => (hoveredDataItemId.value = id),
         mouseleave: () => (hoveredDataItemId.value = undefined),
+        click: onDataItemClick,
       },
     });
   });
@@ -200,6 +228,9 @@
   });
 
   watch(hoveredDataItemId, () => {
+    if (reloading.value) {
+      return;
+    }
     component.update({
       ...componentParams.value,
       config: {
@@ -210,7 +241,28 @@
     });
   });
 
+  watch(
+    selectedDataItemIds,
+    () => {
+      if (reloading.value) {
+        return;
+      }
+      component.update({
+        ...componentParams.value,
+        config: {
+          ...componentParams.value.config,
+          transitionsDuration: mouseTransitionsDuration,
+          transitionsDelay: 0,
+        },
+      });
+    },
+    { deep: true },
+  );
+
   watch(reloading, (value) => {
+    if (value) {
+      selectedDataItemIds.value = [];
+    }
     const data = value ? [] : componentParams.value.data;
     const { transitionsDuration } = component.getDefaultConfig();
     const transitionsDelay = value ? 0 : initialTransitionDelay;
@@ -224,7 +276,7 @@
     if (value) {
       setTimeout(() => {
         reloading.value = false;
-      }, transitionsDuration);
+      }, transitionsDuration * 2);
     }
   });
 </script>
@@ -277,7 +329,8 @@
       opacity: 0;
       transition: opacity calc(v-bind(mouseTransitionsDuration) * 1ms);
 
-      &:hover {
+      .dv-hovered &,
+      .dv-clicked-toggle & {
         opacity: 1;
       }
     }
