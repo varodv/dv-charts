@@ -3,7 +3,7 @@ import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import typescript from 'rollup-plugin-typescript2';
 
 export default {
-  input: ['src/index.ts', 'src/proportional-area-chart/index.ts'],
+  input: ['src/index.ts', 'src/proportional-area-chart/index.ts', 'src/treemap/index.ts'],
   output: {
     format: 'esm',
     dir: 'dist',
