@@ -191,6 +191,8 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
       .style('stroke', ({ data: dataItem }) => this.getSerieStyle(dataItem).stroke)
       .style('stroke-width', ({ data: dataItem }) => this.getSerieStyle(dataItem).strokeWidth);
 
+    this.updateSeriesContentHtml(enterSeries);
+
     return enterSeries;
   }
 
@@ -211,6 +213,52 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
 
   private getSerieHeight({ y0, y1 }: HierarchyRectangularNode<TreemapDataItem>): number {
     return y1 - y0;
+  }
+
+  private updateSeriesContentHtml(
+    series: Selection<SVGGElement, HierarchyRectangularNode<TreemapDataItem>, SVGSVGElement, undefined>,
+    transitionsDelay: ComponentTransitionTimeFn<TreemapDataItem> = () => 0,
+    transitionsDuration: ComponentTransitionTimeFn<TreemapDataItem> = () => 0,
+  ): void {
+    series.each((node, index, nodes) => {
+      const { data: dataItem } = node;
+      const contentHtml = this.config.contentHtml?.(dataItem, index);
+      const serie = select(nodes[index]) as Selection<
+        SVGGElement,
+        HierarchyRectangularNode<TreemapDataItem>,
+        null,
+        undefined
+      >;
+      let contentWrapper = serie.select(`.${this.baseClass}__serie-content-wrapper`) as Selection<
+        SVGForeignObjectElement,
+        HierarchyRectangularNode<TreemapDataItem>,
+        null,
+        undefined
+      >;
+      if (!!contentHtml) {
+        if (contentWrapper.empty()) {
+          contentWrapper = serie
+            .append('foreignObject')
+            .attr('class', `${this.baseClass}__serie-content-wrapper`)
+            .style('overflow', 'visible');
+        }
+        if (contentHtml !== contentWrapper.html()) {
+          contentWrapper.html(contentHtml);
+        }
+        const contentWidth = this.getSerieWidth(node);
+        const contentHeight = this.getSerieHeight(node);
+        contentWrapper
+          .transition()
+          .delay(({ data: dataItem }, index) => transitionsDelay(dataItem, index))
+          .duration(({ data: dataItem }, index) => transitionsDuration(dataItem, index))
+          .attr('width', contentWidth)
+          .attr('height', contentHeight);
+      } else {
+        if (!contentWrapper.empty()) {
+          contentWrapper.remove();
+        }
+      }
+    });
   }
 
   private updateSeries(
@@ -235,6 +283,8 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
       .style('fill', ({ data: dataItem }) => this.getSerieStyle(dataItem).fill)
       .style('stroke', ({ data: dataItem }) => this.getSerieStyle(dataItem).stroke)
       .style('stroke-width', ({ data: dataItem }) => this.getSerieStyle(dataItem).strokeWidth);
+
+    this.updateSeriesContentHtml(series, transitionsDelay, transitionsDuration);
 
     return series;
   }

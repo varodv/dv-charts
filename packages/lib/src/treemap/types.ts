@@ -25,6 +25,7 @@ export interface TreemapConfig extends ComponentConfig<TreemapDataItem> {
   tile: TreemapConfigTile;
   padding: TreemapConfigPadding | TreemapConfigPaddingFn;
   childrenMargin: number | TreemapChildrenMarginFn;
+  contentHtml?: (dataItem: TreemapDataItem, index: number) => string;
 }
 
 export type TreemapConfigTile = 'binary' | 'dice' | 'slice' | 'sliceDice' | 'squarify' | 'resquarify';
