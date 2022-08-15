@@ -1,4 +1,4 @@
-import { ComponentConfig, ComponentParams } from '../common/component.types';
+import { ComponentConfig, ComponentParams, ComponentTransitionTimeFn } from '../common/component.types';
 import { RequireAtLeastOne } from '../common/require-at-least-one';
 
 export type TreemapParams = ComponentParams<TreemapData, TreemapConfig, TreemapStyle>;
@@ -20,7 +20,9 @@ export interface TreemapDataLeafItem extends TreemapDataBaseItem {
   value: number;
 }
 
-export type TreemapConfig = ComponentConfig<TreemapDataItem>;
+export interface TreemapConfig extends ComponentConfig<TreemapDataItem> {
+  transitionsDelay: number | ComponentTransitionTimeFn<TreemapDataItem>;
+}
 
 export interface TreemapStyle {
   fill: string;

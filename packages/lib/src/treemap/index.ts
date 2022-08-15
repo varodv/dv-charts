@@ -39,6 +39,13 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
     this.render(true);
   }
 
+  public getDefaultConfig(): TreemapConfig {
+    return {
+      ...super.getDefaultConfig(),
+      transitionsDelay: 0,
+    };
+  }
+
   public getDefaultStyle(): TreemapStyle {
     return {
       fill: style.colors.primary,
@@ -59,13 +66,14 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
   }
 
   private render(animate: boolean): void {
+    const transitionsDelay = this.getTransitionTimeFn(animate ? this.config.transitionsDelay : 0);
     const transitionsDuration = this.getTransitionTimeFn(animate ? this.config.transitionsDuration : 0);
     this.getSeries()
       .data(this.getNodes(), ({ data: { id } }) => id)
       .join(
-        (enterSeries) => this.enterSeries(enterSeries, transitionsDuration),
-        (updateSeries) => this.updateSeries(updateSeries, transitionsDuration),
-        (exitSeries) => this.exitSeries(exitSeries, transitionsDuration),
+        (enterSeries) => this.enterSeries(enterSeries, transitionsDelay, transitionsDuration),
+        (updateSeries) => this.updateSeries(updateSeries, transitionsDelay, transitionsDuration),
+        (exitSeries) => this.exitSeries(exitSeries, transitionsDelay, transitionsDuration),
       );
   }
 
@@ -98,7 +106,8 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
 
   private enterSeries(
     series: Selection<EnterElement, HierarchyRectangularNode<TreemapDataItem>, SVGSVGElement, undefined>,
-    transitionsDuration: ComponentTransitionTimeFn,
+    transitionsDelay: ComponentTransitionTimeFn<TreemapDataItem>,
+    transitionsDuration: ComponentTransitionTimeFn<TreemapDataItem>,
   ): Selection<SVGGElement, HierarchyRectangularNode<TreemapDataItem>, SVGSVGElement, undefined> {
     const enterSeries = series
       .filter(({ data: { id } }) => id !== this.rootNodeId)
@@ -108,7 +117,8 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
       .style('transform', this.getSerieTranslate3d.bind(this))
       .style('opacity', 0)
       .transition()
-      .duration(transitionsDuration)
+      .delay(({ data: dataItem }, index) => transitionsDelay(dataItem, index))
+      .duration(({ data: dataItem }, index) => transitionsDuration(dataItem, index))
       .style('opacity', ({ data: dataItem }) => this.getSerieStyle(dataItem).opacity);
 
     enterSeries
@@ -142,18 +152,21 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
 
   private updateSeries(
     series: Selection<SVGGElement, HierarchyRectangularNode<TreemapDataItem>, SVGSVGElement, undefined>,
-    transitionsDuration: ComponentTransitionTimeFn,
+    transitionsDelay: ComponentTransitionTimeFn<TreemapDataItem>,
+    transitionsDuration: ComponentTransitionTimeFn<TreemapDataItem>,
   ): Selection<SVGGElement, HierarchyRectangularNode<TreemapDataItem>, SVGSVGElement, undefined> {
     series
       .transition()
-      .duration(transitionsDuration)
+      .delay(({ data: dataItem }, index) => transitionsDelay(dataItem, index))
+      .duration(({ data: dataItem }, index) => transitionsDuration(dataItem, index))
       .style('transform', this.getSerieTranslate3d.bind(this))
       .style('opacity', ({ data: dataItem }) => this.getSerieStyle(dataItem).opacity);
 
     series
       .select(`.${this.baseClass}__area`)
       .transition()
-      .duration(transitionsDuration)
+      .delay(({ data: dataItem }, index) => transitionsDelay(dataItem, index))
+      .duration(({ data: dataItem }, index) => transitionsDuration(dataItem, index))
       .attr('width', this.getSerieWidth.bind(this))
       .attr('height', this.getSerieHeight.bind(this))
       .style('fill', ({ data: dataItem }) => this.getSerieStyle(dataItem).fill);
@@ -163,10 +176,18 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
 
   private exitSeries(
     series: Selection<SVGGElement, HierarchyRectangularNode<TreemapDataItem>, SVGSVGElement, undefined>,
-    transitionsDuration: ComponentTransitionTimeFn,
+    transitionsDelay: ComponentTransitionTimeFn<TreemapDataItem>,
+    transitionsDuration: ComponentTransitionTimeFn<TreemapDataItem>,
   ): void {
-    series.transition().duration(transitionsDuration).style('opacity', 0);
-    series.transition().delay(transitionsDuration).remove();
+    series
+      .transition()
+      .delay(({ data: dataItem }, index) => transitionsDelay(dataItem, index))
+      .duration(({ data: dataItem }, index) => transitionsDuration(dataItem, index))
+      .style('opacity', 0);
+    series
+      .transition()
+      .delay(({ data: dataItem }, index) => transitionsDelay(dataItem, index) + transitionsDuration(dataItem, index))
+      .remove();
   }
 }
 

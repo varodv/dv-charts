@@ -156,8 +156,8 @@ export class ProportionalAreaChart extends Component<
 
   private enterSeries(
     series: Selection<EnterElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
-    transitionsDelay: ComponentTransitionTimeFn,
-    transitionsDuration: ComponentTransitionTimeFn,
+    transitionsDelay: ComponentTransitionTimeFn<ProportionalAreaChartDataItem>,
+    transitionsDuration: ComponentTransitionTimeFn<ProportionalAreaChartDataItem>,
   ): Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined> {
     const enterSeries = series.append('g').attr('class', `${this.baseClass}__serie`);
     enterSeries
@@ -212,8 +212,8 @@ export class ProportionalAreaChart extends Component<
 
   private updateSeriesContentHtml(
     series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
-    transitionsDelay: ComponentTransitionTimeFn = () => 0,
-    transitionsDuration: ComponentTransitionTimeFn = () => 0,
+    transitionsDelay: ComponentTransitionTimeFn<ProportionalAreaChartDataItem> = () => 0,
+    transitionsDuration: ComponentTransitionTimeFn<ProportionalAreaChartDataItem> = () => 0,
   ): void {
     series.each((dataItem, index, nodes) => {
       const contentHtml = this.config.contentHtml?.(dataItem, index);
@@ -322,8 +322,8 @@ export class ProportionalAreaChart extends Component<
 
   private updateSeries(
     series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
-    transitionsDelay: ComponentTransitionTimeFn,
-    transitionsDuration: ComponentTransitionTimeFn,
+    transitionsDelay: ComponentTransitionTimeFn<ProportionalAreaChartDataItem>,
+    transitionsDuration: ComponentTransitionTimeFn<ProportionalAreaChartDataItem>,
   ): Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined> {
     series
       .style('cursor', (dataItem) => this.getSerieStyle(dataItem).cursor)
@@ -350,8 +350,8 @@ export class ProportionalAreaChart extends Component<
 
   private exitSeries(
     series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
-    transitionsDelay: ComponentTransitionTimeFn,
-    transitionsDuration: ComponentTransitionTimeFn,
+    transitionsDelay: ComponentTransitionTimeFn<ProportionalAreaChartDataItem>,
+    transitionsDuration: ComponentTransitionTimeFn<ProportionalAreaChartDataItem>,
   ): void {
     series.transition().delay(transitionsDelay).duration(transitionsDuration).style('opacity', 0);
     series
