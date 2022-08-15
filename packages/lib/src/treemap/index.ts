@@ -42,6 +42,7 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
   public getDefaultStyle(): TreemapStyle {
     return {
       fill: style.colors.primary,
+      opacity: 1,
     };
   }
 
@@ -108,20 +109,27 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
       .style('opacity', 0)
       .transition()
       .duration(transitionsDuration)
-      .style('opacity', 1);
+      .style('opacity', ({ data: dataItem }) => this.getSerieStyle(dataItem).opacity);
 
     enterSeries
       .append('rect')
       .attr('class', `${this.baseClass}__area`)
       .attr('width', this.getSerieWidth.bind(this))
       .attr('height', this.getSerieHeight.bind(this))
-      .style('fill', this.style.fill);
+      .style('fill', ({ data: dataItem }) => this.getSerieStyle(dataItem).fill);
 
     return enterSeries;
   }
 
   private getSerieTranslate3d({ x0, y0 }: HierarchyRectangularNode<TreemapDataItem>): string {
     return `translate3d(${x0}px, ${y0}px, 0)`;
+  }
+
+  private getSerieStyle({ style }: TreemapDataItem): TreemapStyle {
+    return {
+      ...this.style,
+      ...style,
+    };
   }
 
   private getSerieWidth({ x0, x1 }: HierarchyRectangularNode<TreemapDataItem>): number {
@@ -140,14 +148,15 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
       .transition()
       .duration(transitionsDuration)
       .style('transform', this.getSerieTranslate3d.bind(this))
-      .style('opacity', 1);
+      .style('opacity', ({ data: dataItem }) => this.getSerieStyle(dataItem).opacity);
 
     series
       .select(`.${this.baseClass}__area`)
       .transition()
       .duration(transitionsDuration)
       .attr('width', this.getSerieWidth.bind(this))
-      .attr('height', this.getSerieHeight.bind(this));
+      .attr('height', this.getSerieHeight.bind(this))
+      .style('fill', ({ data: dataItem }) => this.getSerieStyle(dataItem).fill);
 
     return series;
   }

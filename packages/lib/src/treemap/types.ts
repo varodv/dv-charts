@@ -1,4 +1,5 @@
 import { ComponentConfig, ComponentParams } from '../common/component.types';
+import { RequireAtLeastOne } from '../common/require-at-least-one';
 
 export type TreemapParams = ComponentParams<TreemapData, TreemapConfig, TreemapStyle>;
 
@@ -8,6 +9,7 @@ export type TreemapDataItem = TreemapDataParentItem | TreemapDataLeafItem;
 
 export interface TreemapDataBaseItem {
   id: string;
+  style?: RequireAtLeastOne<TreemapStyle>;
 }
 
 export interface TreemapDataParentItem extends TreemapDataBaseItem {
@@ -22,4 +24,5 @@ export type TreemapConfig = ComponentConfig<TreemapDataItem>;
 
 export interface TreemapStyle {
   fill: string;
+  opacity: number;
 }
