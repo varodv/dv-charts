@@ -22,7 +22,10 @@ export interface TreemapDataLeafItem extends TreemapDataBaseItem {
 
 export interface TreemapConfig extends ComponentConfig<TreemapDataItem> {
   transitionsDelay: number | ComponentTransitionTimeFn<TreemapDataItem>;
+  tile: TreemapConfigTile;
 }
+
+export type TreemapConfigTile = 'binary' | 'dice' | 'slice' | 'sliceDice' | 'squarify' | 'resquarify';
 
 export interface TreemapStyle {
   fill: string;

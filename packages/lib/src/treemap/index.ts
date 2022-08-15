@@ -1,4 +1,14 @@
-import { hierarchy, HierarchyRectangularNode, treemap } from 'd3-hierarchy';
+import {
+  hierarchy,
+  HierarchyRectangularNode,
+  treemap,
+  treemapBinary,
+  treemapDice,
+  treemapResquarify,
+  treemapSlice,
+  treemapSliceDice,
+  treemapSquarify,
+} from 'd3-hierarchy';
 import { EnterElement, select, Selection } from 'd3-selection';
 
 import { Component } from '../common/component';
@@ -43,6 +53,7 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
     return {
       ...super.getDefaultConfig(),
       transitionsDelay: 0,
+      tile: 'squarify',
     };
   }
 
@@ -101,7 +112,18 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
       data = this.data;
     }
     const root = hierarchy<TreemapDataItem>(data).sum((dataItem) => (dataItem as TreemapDataLeafItem).value ?? 0);
-    return treemap<TreemapDataItem>().size([width, height]).padding(1)(root).descendants();
+    return treemap<TreemapDataItem>().size([width, height]).tile(this.getTile()).padding(1)(root).descendants();
+  }
+
+  private getTile() {
+    return {
+      binary: () => treemapBinary,
+      dice: () => treemapDice,
+      slice: () => treemapSlice,
+      sliceDice: () => treemapSliceDice,
+      squarify: () => treemapSquarify,
+      resquarify: () => treemapResquarify,
+    }[this.config.tile]();
   }
 
   private enterSeries(
