@@ -2,12 +2,20 @@ import { ComponentConfig, ComponentParams } from '../common/component.types';
 
 export type TreemapParams = ComponentParams<TreemapData, TreemapConfig, TreemapStyle>;
 
-export type TreemapData = Array<TreemapDataItem>;
+export type TreemapData = Array<TreemapDataItem> | TreemapDataParentItem;
 
-export interface TreemapDataItem {
+export type TreemapDataItem = TreemapDataParentItem | TreemapDataLeafItem;
+
+export interface TreemapDataBaseItem {
   id: string;
+}
+
+export interface TreemapDataParentItem extends TreemapDataBaseItem {
+  children: Array<TreemapDataItem>;
+}
+
+export interface TreemapDataLeafItem extends TreemapDataBaseItem {
   value: number;
-  children?: Array<TreemapDataItem>;
 }
 
 export type TreemapConfig = ComponentConfig<TreemapDataItem>;
