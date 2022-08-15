@@ -60,8 +60,11 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
   }
 
   public getDefaultStyle(): TreemapStyle {
+    const { colors } = style;
     return {
-      fill: style.colors.primary,
+      fill: colors.primary,
+      stroke: colors.background,
+      strokeWidth: '0px',
       opacity: 1,
     };
   }
@@ -184,7 +187,9 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
       .attr('class', `${this.baseClass}__area`)
       .attr('width', this.getSerieWidth.bind(this))
       .attr('height', this.getSerieHeight.bind(this))
-      .style('fill', ({ data: dataItem }) => this.getSerieStyle(dataItem).fill);
+      .style('fill', ({ data: dataItem }) => this.getSerieStyle(dataItem).fill)
+      .style('stroke', ({ data: dataItem }) => this.getSerieStyle(dataItem).stroke)
+      .style('stroke-width', ({ data: dataItem }) => this.getSerieStyle(dataItem).strokeWidth);
 
     return enterSeries;
   }
@@ -227,7 +232,9 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
       .duration(({ data: dataItem }, index) => transitionsDuration(dataItem, index))
       .attr('width', this.getSerieWidth.bind(this))
       .attr('height', this.getSerieHeight.bind(this))
-      .style('fill', ({ data: dataItem }) => this.getSerieStyle(dataItem).fill);
+      .style('fill', ({ data: dataItem }) => this.getSerieStyle(dataItem).fill)
+      .style('stroke', ({ data: dataItem }) => this.getSerieStyle(dataItem).stroke)
+      .style('stroke-width', ({ data: dataItem }) => this.getSerieStyle(dataItem).strokeWidth);
 
     return series;
   }

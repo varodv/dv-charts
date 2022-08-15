@@ -37,5 +37,7 @@ export type TreemapChildrenMarginFn = (dataItem: TreemapDataItem) => number;
 
 export interface TreemapStyle {
   fill: string;
+  stroke: string;
+  strokeWidth: string;
   opacity: number;
 }
