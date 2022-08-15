@@ -23,9 +23,17 @@ export interface TreemapDataLeafItem extends TreemapDataBaseItem {
 export interface TreemapConfig extends ComponentConfig<TreemapDataItem> {
   transitionsDelay: number | ComponentTransitionTimeFn<TreemapDataItem>;
   tile: TreemapConfigTile;
+  padding: TreemapConfigPadding | TreemapConfigPaddingFn;
+  childrenMargin: number | TreemapChildrenMarginFn;
 }
 
 export type TreemapConfigTile = 'binary' | 'dice' | 'slice' | 'sliceDice' | 'squarify' | 'resquarify';
+
+export type TreemapConfigPadding = number | [number, number, number, number];
+
+export type TreemapConfigPaddingFn = (dataItem: TreemapDataItem) => TreemapConfigPadding;
+
+export type TreemapChildrenMarginFn = (dataItem: TreemapDataItem) => number;
 
 export interface TreemapStyle {
   fill: string;

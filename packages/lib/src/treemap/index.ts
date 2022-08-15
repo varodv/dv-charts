@@ -54,6 +54,8 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
       ...super.getDefaultConfig(),
       transitionsDelay: 0,
       tile: 'squarify',
+      padding: 1,
+      childrenMargin: 1,
     };
   }
 
@@ -112,7 +114,15 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
       data = this.data;
     }
     const root = hierarchy<TreemapDataItem>(data).sum((dataItem) => (dataItem as TreemapDataLeafItem).value ?? 0);
-    return treemap<TreemapDataItem>().size([width, height]).tile(this.getTile()).padding(1)(root).descendants();
+    return treemap<TreemapDataItem>()
+      .tile(this.getTile())
+      .size([width, height])
+      .paddingTop((node) => this.getPaddingFn()(node)[0])
+      .paddingRight((node) => this.getPaddingFn()(node)[1])
+      .paddingBottom((node) => this.getPaddingFn()(node)[2])
+      .paddingLeft((node) => this.getPaddingFn()(node)[3])
+      .paddingInner(this.getChildrenMarginFn().bind(this))(root)
+      .descendants();
   }
 
   private getTile() {
@@ -124,6 +134,32 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
       squarify: () => treemapSquarify,
       resquarify: () => treemapResquarify,
     }[this.config.tile]();
+  }
+
+  private getPaddingFn(): (node: HierarchyRectangularNode<TreemapDataItem>) => [number, number, number, number] {
+    return ({ data: dataItem }) => {
+      if (dataItem.id === this.rootNodeId) {
+        return [0, 0, 0, 0];
+      }
+      let { padding } = this.config;
+      if (typeof padding === 'function') {
+        padding = padding(dataItem);
+      }
+      if (typeof padding === 'number') {
+        padding = [padding, padding, padding, padding];
+      }
+      return padding;
+    };
+  }
+
+  private getChildrenMarginFn(): (node: HierarchyRectangularNode<TreemapDataItem>) => number {
+    return ({ data: dataItem }) => {
+      let { childrenMargin } = this.config;
+      if (typeof childrenMargin === 'function') {
+        childrenMargin = childrenMargin(dataItem);
+      }
+      return childrenMargin;
+    };
   }
 
   private enterSeries(
