@@ -12,7 +12,7 @@ import {
 import { EnterElement, select, Selection } from 'd3-selection';
 
 import { Component } from '../common/component';
-import { ComponentTransitionTimeFn, Size } from '../common/component.types';
+import { ComponentMouseHandlerTargetDetails, ComponentTransitionTimeFn, Size } from '../common/component.types';
 import { style } from '../common/style';
 import {
   TreemapConfig,
@@ -20,11 +20,12 @@ import {
   TreemapDataItem,
   TreemapDataLeafItem,
   TreemapDataParentItem,
+  TreemapHandlers,
   TreemapParams,
   TreemapStyle,
 } from './types';
 
-export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle> {
+export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle, TreemapHandlers> {
   private readonly baseClass = 'dv-treemap';
 
   private readonly selections: {
@@ -34,7 +35,7 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
 
   private readonly rootNodeId = 'dv-root';
 
-  public constructor(args: { element: HTMLElement; params?: TreemapParams }) {
+  public constructor(args: { element: HTMLElement; params?: TreemapParams; handlers?: TreemapHandlers }) {
     super(args);
 
     this.element.classList.add(this.baseClass);
@@ -66,6 +67,7 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
       stroke: colors.background,
       strokeWidth: '0px',
       opacity: 1,
+      cursor: 'auto',
     };
   }
 
@@ -177,6 +179,7 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
     enterSeries
       .style('transform', this.getSerieTranslate3d.bind(this))
       .style('opacity', 0)
+      .style('cursor', ({ data: dataItem }) => this.getSerieStyle(dataItem).cursor)
       .transition()
       .delay(({ data: dataItem }, index) => transitionsDelay(dataItem, index))
       .duration(({ data: dataItem }, index) => transitionsDuration(dataItem, index))
@@ -192,6 +195,8 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
       .style('stroke-width', ({ data: dataItem }) => this.getSerieStyle(dataItem).strokeWidth);
 
     this.updateSeriesContentHtml(enterSeries);
+
+    this.addSeriesHandlers(enterSeries);
 
     return enterSeries;
   }
@@ -261,12 +266,58 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle>
     });
   }
 
+  private addSeriesHandlers(
+    series: Selection<SVGGElement, HierarchyRectangularNode<TreemapDataItem>, SVGSVGElement, undefined>,
+  ): void {
+    series.on('mouseenter', (_event, node) => {
+      const { data: dataItem } = node;
+      this.updateSeriesHoverClasses(this.getSeries(), ({ data: { id } }) => id === dataItem.id);
+
+      this.handlers?.mouseenter?.({
+        dataItem,
+        targetDetails: this.getSerieHandlerTargetDetails(node),
+      });
+    });
+
+    series.on('mouseleave', (_event, node) => {
+      this.updateSeriesHoverClasses(this.getSeries());
+
+      const { data: dataItem } = node;
+      this.handlers?.mouseleave?.({
+        dataItem,
+        targetDetails: this.getSerieHandlerTargetDetails(node),
+      });
+    });
+
+    series.on('click', (_event, node) => {
+      const { data: dataItem } = node;
+      this.updateSeriesClickClasses(this.getSeries(), ({ data: { id } }) => id === dataItem.id);
+
+      this.handlers?.click?.({
+        dataItem,
+        targetDetails: this.getSerieHandlerTargetDetails(node),
+      });
+    });
+  }
+
+  private getSerieHandlerTargetDetails(
+    node: HierarchyRectangularNode<TreemapDataItem>,
+  ): ComponentMouseHandlerTargetDetails {
+    return {
+      x: node.x0,
+      y: node.y0,
+      width: this.getSerieWidth(node),
+      height: this.getSerieHeight(node),
+    };
+  }
+
   private updateSeries(
     series: Selection<SVGGElement, HierarchyRectangularNode<TreemapDataItem>, SVGSVGElement, undefined>,
     transitionsDelay: ComponentTransitionTimeFn<TreemapDataItem>,
     transitionsDuration: ComponentTransitionTimeFn<TreemapDataItem>,
   ): Selection<SVGGElement, HierarchyRectangularNode<TreemapDataItem>, SVGSVGElement, undefined> {
     series
+      .style('cursor', ({ data: dataItem }) => this.getSerieStyle(dataItem).cursor)
       .transition()
       .delay(({ data: dataItem }, index) => transitionsDelay(dataItem, index))
       .duration(({ data: dataItem }, index) => transitionsDuration(dataItem, index))

@@ -1,4 +1,9 @@
-import { ComponentConfig, ComponentParams, ComponentTransitionTimeFn } from '../common/component.types';
+import {
+  ComponentConfig,
+  ComponentMouseHandlerPayload,
+  ComponentParams,
+  ComponentTransitionTimeFn,
+} from '../common/component.types';
 import { RequireAtLeastOne } from '../common/require-at-least-one';
 
 export type TreemapParams = ComponentParams<TreemapData, TreemapConfig, TreemapStyle>;
@@ -41,4 +46,15 @@ export interface TreemapStyle {
   stroke: string;
   strokeWidth: string;
   opacity: number;
+  cursor: string;
+}
+
+export type TreemapHandlers = RequireAtLeastOne<{
+  mouseenter: (payload: TreemapHandlerPayload) => void;
+  mouseleave: (payload: TreemapHandlerPayload) => void;
+  click: (payload: TreemapHandlerPayload) => void;
+}>;
+
+export interface TreemapHandlerPayload extends ComponentMouseHandlerPayload {
+  dataItem: TreemapDataItem;
 }
