@@ -13,6 +13,7 @@ import { EnterElement, select, Selection } from 'd3-selection';
 
 import { Component } from '../common/component';
 import { ComponentMouseHandlerTargetDetails, ComponentTransitionTimeFn, Size } from '../common/component.types';
+import { ComponentUtils } from '../common/component.utils';
 import { style } from '../common/style';
 import {
   TreemapConfig,
@@ -84,8 +85,8 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle,
   }
 
   private render(animate: boolean): void {
-    const transitionsDelay = this.getTransitionTimeFn(animate ? this.config.transitionsDelay : 0);
-    const transitionsDuration = this.getTransitionTimeFn(animate ? this.config.transitionsDuration : 0);
+    const transitionsDelay = ComponentUtils.getTransitionTimeFn(animate ? this.config.transitionsDelay : 0);
+    const transitionsDuration = ComponentUtils.getTransitionTimeFn(animate ? this.config.transitionsDuration : 0);
     this.getSeries()
       .data(this.getNodes(), ({ data: { id } }) => id)
       .join(
@@ -271,7 +272,7 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle,
   ): void {
     series.on('mouseenter', (_event, node) => {
       const { data: dataItem } = node;
-      this.updateSeriesHoverClasses(this.getSeries(), ({ data: { id } }) => id === dataItem.id);
+      ComponentUtils.updateSeriesHoverClasses(this.getSeries(), ({ data: { id } }) => id === dataItem.id);
 
       this.handlers?.mouseenter?.({
         dataItem,
@@ -280,7 +281,7 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle,
     });
 
     series.on('mouseleave', (_event, node) => {
-      this.updateSeriesHoverClasses(this.getSeries());
+      ComponentUtils.updateSeriesHoverClasses(this.getSeries());
 
       const { data: dataItem } = node;
       this.handlers?.mouseleave?.({
@@ -291,7 +292,7 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle,
 
     series.on('click', (_event, node) => {
       const { data: dataItem } = node;
-      this.updateSeriesClickClasses(this.getSeries(), ({ data: { id } }) => id === dataItem.id);
+      ComponentUtils.updateSeriesClickClasses(this.getSeries(), ({ data: { id } }) => id === dataItem.id);
 
       this.handlers?.click?.({
         dataItem,

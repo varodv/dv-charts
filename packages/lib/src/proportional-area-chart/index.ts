@@ -4,6 +4,7 @@ import 'd3-transition';
 
 import { Component } from '../common/component';
 import { ComponentMouseHandlerTargetDetails, ComponentTransitionTimeFn, Size } from '../common/component.types';
+import { ComponentUtils } from '../common/component.utils';
 import { style } from '../common/style';
 import {
   ProportionalAreaChartConfig,
@@ -132,8 +133,8 @@ export class ProportionalAreaChart extends Component<
   }
 
   private render(animate: boolean): void {
-    const transitionsDelay = this.getTransitionTimeFn(animate ? this.config.transitionsDelay : 0);
-    const transitionsDuration = this.getTransitionTimeFn(animate ? this.config.transitionsDuration : 0);
+    const transitionsDelay = ComponentUtils.getTransitionTimeFn(animate ? this.config.transitionsDelay : 0);
+    const transitionsDuration = ComponentUtils.getTransitionTimeFn(animate ? this.config.transitionsDuration : 0);
     const series = this.getSeries()
       .data(this.data ?? [], ({ id }) => id)
       .join(
@@ -255,7 +256,7 @@ export class ProportionalAreaChart extends Component<
     series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
   ): void {
     series.on('mouseenter', (_event, dataItem) => {
-      this.updateSeriesHoverClasses(this.getSeries(), ({ id }) => id === dataItem.id);
+      ComponentUtils.updateSeriesHoverClasses(this.getSeries(), ({ id }) => id === dataItem.id);
 
       this.handlers?.mouseenter?.({
         dataItem,
@@ -264,7 +265,7 @@ export class ProportionalAreaChart extends Component<
     });
 
     series.on('mouseleave', (_event, dataItem) => {
-      this.updateSeriesHoverClasses(this.getSeries());
+      ComponentUtils.updateSeriesHoverClasses(this.getSeries());
 
       this.handlers?.mouseleave?.({
         dataItem,
@@ -273,7 +274,7 @@ export class ProportionalAreaChart extends Component<
     });
 
     series.on('click', (_event, dataItem) => {
-      this.updateSeriesClickClasses(this.getSeries(), ({ id }) => id === dataItem.id);
+      ComponentUtils.updateSeriesClickClasses(this.getSeries(), ({ id }) => id === dataItem.id);
 
       this.handlers?.click?.({
         dataItem,
