@@ -213,42 +213,31 @@ export class ProportionalAreaChart extends Component<
 
   private updateSeriesContentHtml(
     series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
-    transitionsDelay: ComponentTransitionTimeFn<ProportionalAreaChartDataItem> = () => 0,
-    transitionsDuration: ComponentTransitionTimeFn<ProportionalAreaChartDataItem> = () => 0,
+    transitionsDelay?: ComponentTransitionTimeFn<ProportionalAreaChartDataItem>,
+    transitionsDuration?: ComponentTransitionTimeFn<ProportionalAreaChartDataItem>,
   ): void {
-    series.each((dataItem, index, nodes) => {
-      const contentHtml = this.config.contentHtml?.(dataItem, index);
-      const serie = select(nodes[index]) as Selection<SVGGElement, ProportionalAreaChartDataItem, null, undefined>;
-      let contentWrapper = serie.select(`.${this.baseClass}__serie-content-wrapper`) as Selection<
-        SVGForeignObjectElement,
-        ProportionalAreaChartDataItem,
-        null,
-        undefined
-      >;
-      if (!!contentHtml) {
-        if (contentWrapper.empty()) {
-          contentWrapper = serie
-            .append('foreignObject')
-            .attr('class', `${this.baseClass}__serie-content-wrapper`)
-            .style('overflow', 'visible');
-        }
-        if (contentHtml !== contentWrapper.html()) {
-          contentWrapper.html(contentHtml);
-        }
-        const contentSize = this.getSerieCircleRadius(dataItem) * 2;
-        contentWrapper
-          .transition()
-          .delay(transitionsDelay)
-          .duration(transitionsDuration)
-          .attr('x', -contentSize / 2)
-          .attr('y', -contentSize / 2)
-          .attr('width', contentSize)
-          .attr('height', contentSize);
-      } else {
-        if (!contentWrapper.empty()) {
-          contentWrapper.remove();
-        }
-      }
+    const { contentHtml } = this.config;
+    const position = (dataItem: ProportionalAreaChartDataItem) => {
+      const serieRadius = this.getSerieCircleRadius(dataItem);
+      return {
+        x: -serieRadius,
+        y: -serieRadius,
+      };
+    };
+    const size = (dataItem: ProportionalAreaChartDataItem) => {
+      const serieSize = this.getSerieCircleRadius(dataItem) * 2;
+      return {
+        width: serieSize,
+        height: serieSize,
+      };
+    };
+    ComponentUtils.updateSeriesContentHtml<SVGGElement, ProportionalAreaChartDataItem>({
+      series,
+      contentHtml,
+      position,
+      size,
+      transitionsDelay,
+      transitionsDuration,
     });
   }
 

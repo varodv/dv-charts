@@ -25,7 +25,7 @@ export interface ProportionalAreaChartConfig extends ComponentConfig<Proportiona
   minValue: number | 'min';
   maxValue: number | 'max';
   minSize: number;
-  contentHtml?: (dataItem: ProportionalAreaChartDataItem, index: number) => string;
+  contentHtml?: (dataItem: ProportionalAreaChartDataItem) => string;
 }
 
 export interface ProportionalAreaChartStyle {

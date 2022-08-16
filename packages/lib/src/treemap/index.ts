@@ -226,44 +226,16 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle,
     transitionsDelay: ComponentTransitionTimeFn<TreemapDataItem> = () => 0,
     transitionsDuration: ComponentTransitionTimeFn<TreemapDataItem> = () => 0,
   ): void {
-    series.each((node, index, nodes) => {
-      const { data: dataItem } = node;
-      const contentHtml = this.config.contentHtml?.(dataItem, index);
-      const serie = select(nodes[index]) as Selection<
-        SVGGElement,
-        HierarchyRectangularNode<TreemapDataItem>,
-        null,
-        undefined
-      >;
-      let contentWrapper = serie.select(`.${this.baseClass}__serie-content-wrapper`) as Selection<
-        SVGForeignObjectElement,
-        HierarchyRectangularNode<TreemapDataItem>,
-        null,
-        undefined
-      >;
-      if (!!contentHtml) {
-        if (contentWrapper.empty()) {
-          contentWrapper = serie
-            .append('foreignObject')
-            .attr('class', `${this.baseClass}__serie-content-wrapper`)
-            .style('overflow', 'visible');
-        }
-        if (contentHtml !== contentWrapper.html()) {
-          contentWrapper.html(contentHtml);
-        }
-        const contentWidth = this.getSerieWidth(node);
-        const contentHeight = this.getSerieHeight(node);
-        contentWrapper
-          .transition()
-          .delay(({ data: dataItem }, index) => transitionsDelay(dataItem, index))
-          .duration(({ data: dataItem }, index) => transitionsDuration(dataItem, index))
-          .attr('width', contentWidth)
-          .attr('height', contentHeight);
-      } else {
-        if (!contentWrapper.empty()) {
-          contentWrapper.remove();
-        }
-      }
+    const size = (node: HierarchyRectangularNode<TreemapDataItem>) => ({
+      width: this.getSerieWidth(node),
+      height: this.getSerieHeight(node),
+    });
+    ComponentUtils.updateSeriesContentHtml<SVGGElement, HierarchyRectangularNode<TreemapDataItem>>({
+      series,
+      ...(!!this.config.contentHtml && { contentHtml: ({ data: dataItem }) => this.config.contentHtml!(dataItem) }),
+      size,
+      transitionsDelay: ({ data: dataItem }, index) => transitionsDelay(dataItem, index),
+      transitionsDuration: ({ data: dataItem }, index) => transitionsDuration(dataItem, index),
     });
   }
 
