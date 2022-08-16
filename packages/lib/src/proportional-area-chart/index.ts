@@ -255,7 +255,7 @@ export class ProportionalAreaChart extends Component<
     series: Selection<SVGGElement, ProportionalAreaChartDataItem, SVGSVGElement, undefined>,
   ): void {
     series.on('mouseenter', (_event, dataItem) => {
-      this.getSeries().classed('dv-hovered', ({ id }) => id === dataItem.id);
+      this.updateSeriesHoverClasses(this.getSeries(), ({ id }) => id === dataItem.id);
 
       this.handlers?.mouseenter?.({
         dataItem,
@@ -264,7 +264,7 @@ export class ProportionalAreaChart extends Component<
     });
 
     series.on('mouseleave', (_event, dataItem) => {
-      this.getSeries().classed('dv-hovered', false);
+      this.updateSeriesHoverClasses(this.getSeries());
 
       this.handlers?.mouseleave?.({
         dataItem,
@@ -273,35 +273,7 @@ export class ProportionalAreaChart extends Component<
     });
 
     series.on('click', (_event, dataItem) => {
-      this.getSeries().each(({ id }, index, nodes) => {
-        const serie = select(nodes[index]);
-        const isClickedSerie = id === dataItem.id;
-        serie
-          .classed('dv-clicked', isClickedSerie || serie.classed('dv-clicked'))
-          .classed('dv-clicked-toggle', () => {
-            if (isClickedSerie) {
-              return !serie.classed('dv-clicked-toggle');
-            }
-            return serie.classed('dv-clicked-toggle');
-          })
-          .classed('dv-clicked-first', () => {
-            if (isClickedSerie) {
-              return serie.classed('dv-clicked-first') || this.selections.svg.selectAll('.dv-clicked-first').empty();
-            }
-            return serie.classed('dv-clicked-first');
-          })
-          .classed('dv-clicked-first-toggle', () => {
-            if (isClickedSerie) {
-              return (
-                !serie.classed('dv-clicked-first-toggle') &&
-                this.selections.svg.selectAll('.dv-clicked-first-toggle').empty()
-              );
-            }
-            return serie.classed('dv-clicked-first-toggle');
-          })
-          .classed('dv-clicked-last', isClickedSerie)
-          .classed('dv-clicked-last-toggle', isClickedSerie && !serie.classed('dv-clicked-last-toggle'));
-      });
+      this.updateSeriesClickClasses(this.getSeries(), ({ id }) => id === dataItem.id);
 
       this.handlers?.click?.({
         dataItem,
