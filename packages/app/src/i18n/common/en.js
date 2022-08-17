@@ -6,6 +6,7 @@ export default {
       guide: 'guide',
       components: 'components',
       proportionalAreaChart: 'proportional area chart',
+      treemap: 'treemap',
     },
   },
 };

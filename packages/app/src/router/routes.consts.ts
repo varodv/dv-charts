@@ -5,5 +5,6 @@ export const ROUTES_CONSTS = {
     guide: 'guide',
     components: 'components',
     proportionalAreaChart: 'proportionalAreaChart',
+    treemap: 'treemap',
   },
 };

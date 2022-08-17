@@ -16,6 +16,17 @@ export const COMPONENTS_ROUTES: Array<Route> = [
       },
     },
   },
+  {
+    path: 'treemap',
+    name: NAMES.treemap,
+    component: () => import('../views/components/treemap.view.vue'),
+    meta: {
+      label: () => useI18n().getMessage('common.routes.treemap'),
+      messages: {
+        en: () => import('../i18n/treemap/en.js'),
+      },
+    },
+  },
 ];
 
 export const DOCS_ROUTES: Array<Route> = [
