@@ -5,4 +5,5 @@ export { default as NavigationMenu } from './navigation/navigation-menu.componen
 
 export { default as ProportionalAreaChartExample } from './proportional-area-chart/example.component.vue';
 
+export { default as Treemap } from './treemap/treemap.component.vue';
 export { default as TreemapExample } from './treemap/example.component.vue';
