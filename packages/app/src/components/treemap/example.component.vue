@@ -35,10 +35,13 @@
 
   const baseClass = 'treemap-example';
 
-  const data = rawData.map(({ company, revenue }) => {
+  const data = rawData.map(({ company, revenue, breakdown }) => {
     return {
       id: company,
-      value: revenue,
+      children: breakdown.map(({ product, percentage }) => ({
+        id: product,
+        value: revenue * (percentage / 100),
+      })),
     };
   });
 

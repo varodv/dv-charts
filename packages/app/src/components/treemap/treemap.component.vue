@@ -28,6 +28,7 @@
 
   const params = computed(() => {
     const config = {
+      padding: [30, 5, 5, 5],
       contentHtml: getContentHtml,
     };
     return {
@@ -85,7 +86,7 @@
       align-items: flex-start;
       width: 100%;
       height: 100%;
-      padding: 4px;
+      padding: 5px;
     }
 
     &__content-text {
