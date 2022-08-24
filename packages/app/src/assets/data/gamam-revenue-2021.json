@@ -1,0 +1,140 @@
+[
+  {
+    "company": "Amazon",
+    "revenue": 469.8,
+    "breakdown": [
+      {
+        "product": "Online stores",
+        "percentage": 47.3
+      },
+      {
+        "product": "Third party seller services",
+        "percentage": 22
+      },
+      {
+        "product": "Amazon Web Services",
+        "percentage": 13.2
+      },
+      {
+        "product": "Subscription services",
+        "percentage": 6.8
+      },
+      {
+        "product": "Advertising services",
+        "percentage": 6.6
+      },
+      {
+        "product": "Physical stores",
+        "percentage": 3.6
+      },
+      {
+        "product": "Other",
+        "percentage": 0.5
+      }
+    ]
+  },
+  {
+    "company": "Apple",
+    "revenue": 365.8,
+    "breakdown": [
+      {
+        "product": "iPhone",
+        "percentage": 52.5
+      },
+      {
+        "product": "Services",
+        "percentage": 18.7
+      },
+      {
+        "product": "Wearables",
+        "percentage": 10.5
+      },
+      {
+        "product": "Mac",
+        "percentage": 9.6
+      },
+      {
+        "product": "iPad",
+        "percentage": 8.7
+      }
+    ]
+  },
+  {
+    "company": "Alphabet",
+    "revenue": 257.6,
+    "breakdown": [
+      {
+        "product": "Advertising - Google properties",
+        "percentage": 69
+      },
+      {
+        "product": "Google other",
+        "percentage": 18.3
+      },
+      {
+        "product": "Advertising - Google network members",
+        "percentage": 12.3
+      },
+      {
+        "product": "Other bets",
+        "percentage": 0.4
+      }
+    ]
+  },
+  {
+    "company": "Microsoft",
+    "revenue": 168.1,
+    "breakdown": [
+      {
+        "product": "Microsoft Azure",
+        "percentage": 31.3
+      },
+      {
+        "product": "Office",
+        "percentage": 23.7
+      },
+      {
+        "product": "Windows",
+        "percentage": 13.8
+      },
+      {
+        "product": "Gaming",
+        "percentage": 9.1
+      },
+      {
+        "product": "LinkedIn",
+        "percentage": 6.1
+      },
+      {
+        "product": "Search Ads",
+        "percentage": 5.1
+      },
+      {
+        "product": "Enterprise services",
+        "percentage": 4.1
+      },
+      {
+        "product": "Devices",
+        "percentage": 4
+      },
+      {
+        "product": "Other",
+        "percentage": 2.7
+      }
+    ]
+  },
+  {
+    "company": "Meta",
+    "revenue": 117.9,
+    "breakdown": [
+      {
+        "product": "Advertising",
+        "percentage": 97.5
+      },
+      {
+        "product": "Other",
+        "percentage": 2.5
+      }
+    ]
+  }
+]

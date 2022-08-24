@@ -26,6 +26,8 @@
 <script setup lang="ts">
   import { ref, watch } from 'vue';
 
+  import rawData from '../../assets/data/gamam-revenue-2021.json';
+
   import { useI18n } from '../../stores';
   import Treemap from './treemap.component.vue';
 
@@ -33,28 +35,12 @@
 
   const baseClass = 'treemap-example';
 
-  const data = [
-    {
-      id: 'Amazon',
-      value: 469.8,
-    },
-    {
-      id: 'Apple',
-      value: 365.8,
-    },
-    {
-      id: 'Alphabet',
-      value: 257.6,
-    },
-    {
-      id: 'Microsoft',
-      value: 168.1,
-    },
-    {
-      id: 'Meta',
-      value: 117.9,
-    },
-  ];
+  const data = rawData.map(({ company, revenue }) => {
+    return {
+      id: company,
+      value: revenue,
+    };
+  });
 
   const reloading = ref(false);
 
