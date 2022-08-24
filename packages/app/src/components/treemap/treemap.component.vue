@@ -6,6 +6,10 @@
   import { Treemap } from 'dv-charts';
   import { computed, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue';
 
+  import { useI18n } from '../../stores';
+
+  const { locale } = useI18n();
+
   const props = defineProps({
     data: {
       type: [Array, Object], // TreemapData
@@ -32,12 +36,19 @@
     };
   });
 
-  const getContentHtml = ({ id }): string => {
+  const getContentHtml = (dataItem): string => {
+    const text = `${dataItem.id} (${getDataItemValue(dataItem).toLocaleString(locale)})`;
     return `<div class="${baseClass}__content">
-      <span class="${baseClass}__content-text ${baseClass}__content-text--id" title="${id}">
-        ${id}
+      <span class="${baseClass}__content-text" title="${text}">
+        ${text}
       </span>
     </div>`;
+  };
+
+  const getDataItemValue = (dataItem): number => {
+    return (
+      dataItem.value ?? dataItem.children.reduce((result, childDataItem) => result + getDataItemValue(childDataItem), 0)
+    );
   };
 
   onMounted(() => {
@@ -71,10 +82,10 @@
   .treemap {
     &__content {
       display: flex;
-      justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       width: 100%;
       height: 100%;
+      padding: 4px;
     }
 
     &__content-text {
