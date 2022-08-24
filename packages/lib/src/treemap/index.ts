@@ -127,7 +127,8 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle,
       .paddingRight((node) => this.getPaddingFn()(node)[1])
       .paddingBottom((node) => this.getPaddingFn()(node)[2])
       .paddingLeft((node) => this.getPaddingFn()(node)[3])
-      .paddingInner(this.getChildrenMarginFn().bind(this))(root)
+      .paddingInner(this.getChildrenMarginFn().bind(this))
+      .round(true)(root)
       .descendants();
   }
 
