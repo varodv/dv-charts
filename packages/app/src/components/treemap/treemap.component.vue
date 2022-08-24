@@ -89,7 +89,6 @@
   .treemap {
     &__content {
       display: flex;
-      align-items: flex-start;
       width: 100%;
       height: 100%;
       padding: 5px;
