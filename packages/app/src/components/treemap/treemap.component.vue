@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
   import { Treemap } from 'dv-charts';
-  import { computed, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue';
+  import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
   import { useI18n } from '../../stores';
 
@@ -16,7 +16,6 @@
       default: () => [],
     },
   });
-  const { data } = toRefs(props);
 
   const baseClass = 'treemap';
 
@@ -27,12 +26,19 @@
   const initialTransitionDelay = (_, index) => index * 100;
 
   const params = computed(() => {
+    const data = props.data.map((dataItem) => ({
+      ...dataItem,
+      style: {
+        strokeWidth: '0',
+      },
+    }));
     const config = {
       padding: [30, 5, 5, 5],
+      childrenMargin: 5,
       contentHtml: getContentHtml,
     };
     return {
-      data: data.value,
+      data,
       config,
     };
   });
