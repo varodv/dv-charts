@@ -56,8 +56,8 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle,
       ...super.getDefaultConfig(),
       transitionsDelay: 0,
       tile: 'squarify',
-      padding: 1,
-      childrenMargin: 1,
+      padding: 0,
+      childrenMargin: 0,
     };
   }
 
@@ -66,7 +66,7 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle,
     return {
       fill: colors.primary,
       stroke: colors.background,
-      strokeWidth: '0px',
+      strokeWidth: '1px',
       opacity: 1,
       cursor: 'auto',
     };
