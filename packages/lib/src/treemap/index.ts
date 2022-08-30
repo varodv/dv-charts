@@ -244,8 +244,14 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle,
     series: Selection<SVGGElement, HierarchyRectangularNode<TreemapDataItem>, SVGSVGElement, undefined>,
   ): void {
     series.on('mouseenter', (_event, node) => {
+      const series = this.getSeries();
+      const serie = series.filter(({ data: { id } }) => id === node.data.id);
+      if (serie.classed(`${this.baseClass}__serie--exit`)) {
+        return;
+      }
+
       const { data: dataItem } = node;
-      ComponentUtils.updateSeriesHoverClasses(this.getSeries(), ({ data: { id } }) => id === dataItem.id);
+      ComponentUtils.updateSeriesHoverClasses(series, ({ data: { id } }) => id === dataItem.id);
 
       this.handlers?.mouseenter?.({
         dataItem,
@@ -254,7 +260,13 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle,
     });
 
     series.on('mouseleave', (_event, node) => {
-      ComponentUtils.updateSeriesHoverClasses(this.getSeries());
+      const series = this.getSeries();
+      const serie = series.filter(({ data: { id } }) => id === node.data.id);
+      if (serie.classed(`${this.baseClass}__serie--exit`)) {
+        return;
+      }
+
+      ComponentUtils.updateSeriesHoverClasses(series);
 
       const { data: dataItem } = node;
       this.handlers?.mouseleave?.({
@@ -264,8 +276,14 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle,
     });
 
     series.on('click', (_event, node) => {
+      const series = this.getSeries();
+      const serie = series.filter(({ data: { id } }) => id === node.data.id);
+      if (serie.classed(`${this.baseClass}__serie--exit`)) {
+        return;
+      }
+
       const { data: dataItem } = node;
-      ComponentUtils.updateSeriesClickClasses(this.getSeries(), ({ data: { id } }) => id === dataItem.id);
+      ComponentUtils.updateSeriesClickClasses(series, ({ data: { id } }) => id === dataItem.id);
 
       this.handlers?.click?.({
         dataItem,
@@ -291,6 +309,7 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle,
     transitionsDuration: ComponentTransitionTimeFn<TreemapDataItem>,
   ): Selection<SVGGElement, HierarchyRectangularNode<TreemapDataItem>, SVGSVGElement, undefined> {
     series
+      .classed(`${this.baseClass}__serie--exit`, false)
       .style('cursor', ({ data: dataItem }) => this.getSerieStyle(dataItem).cursor)
       .transition()
       .delay(({ data: dataItem }, index) => transitionsDelay(dataItem, index))
@@ -320,6 +339,7 @@ export class Treemap extends Component<TreemapData, TreemapConfig, TreemapStyle,
     transitionsDuration: ComponentTransitionTimeFn<TreemapDataItem>,
   ): void {
     series
+      .classed(`${this.baseClass}__serie--exit`, true)
       .transition()
       .delay(({ data: dataItem }, index) => transitionsDelay(dataItem, index))
       .duration(({ data: dataItem }, index) => transitionsDuration(dataItem, index))
